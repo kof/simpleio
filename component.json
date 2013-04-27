@@ -1,0 +1,22 @@
+{
+  "name": "simpleio",
+  "version": "0.1.0",
+  "description": "Minimalistic xhr long polling based communication.",
+  "keywords": [
+    "xhr",
+    "ajax",
+    "long polling",
+    "socket.io",
+    "lightweight"
+  ],
+  "dependencies": {
+    "component/emitter": "1.0.0"
+  },
+  "main": "lib/client/index.js",
+  "scripts": [
+    "lib/client/index.js",
+    "lib/client/Client.js"
+  ],
+  "repo": "kof/simple.io",
+  "license": "MIT"
+}
