@@ -1,30 +1,53 @@
 var express = require('express'),
-    Simpleio = require('..');
+    simpleio = require('..'),
+    path = require('path'),
+    fs = require('fs'),
+    program = require('commander');
 
-var simpleio,
-    app;
+var sio;
 
-simpleio = new Simpleio()
+sio = new simpleio.Server()
     .on('error', console.error);
 
-app = express()
+express()
     .use(express.query())
     .use(express.bodyParser())
     .all('/simpleio', function(req, res, next) {
-        console.log('simpleio incomming', req.params);
+        var connection;
 
-        simpleio.connect(req.params)
-            .on('messages', function(messages) {
-                res.json(messages);
+        connection = sio.connect({
+            clientId: req.param('clientId'),
+            messages: req.param('messages'),
+            delivered: req.param('delivered'),
+            events: req.param('events'),
+            // You might want to get recipient id from your session.
+            recipient: req.param('userId')
+        });
+
+        connection
+            .once('response', function(data) {
+                res.json(data);
             })
             .once('error', next)
             .on('error', console.error);
 
     })
-    .use(function(err, req, res, next) {
-        next(err);
-    })
+    .use(express.static(__dirname + '/..'))
     .listen(3000);
 
 console.log('Running on localhost:3000');
+
+program.prompt('Type recipient id:', function(recipient) {
+
+    program.prompt('Message:', function(body) {
+        sio.send(recipient, {
+            event: 'myevent',
+            data: body
+        }, function(err, delivered) {
+            if (err) return console.log('Error', err);
+
+            console.log('Delivered', delivered);
+        });
+    });
+});
 

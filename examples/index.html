@@ -2,16 +2,29 @@
 <head>
     <script src="../build/simpleio.js"></script>
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+</head>
+<body>
+    <input type="text" id="name"/><button id="connect">Connect</button>
+
     <script>
         (function() {
             simpleio.request = jQuery.ajax;
 
-            var client = simpleio.createClient();
-
-            client.connect();
+            var client = new simpleio.Client();
+            $('#connect').click(function() {
+                client
+                    .connect({
+                        userId: $('#name').val()
+                    })
+                    .on('message', function(message) {
+                        console.log('message', message);
+                    })
+                    .on('error', function(err) {
+                        console.log('error', err);
+                    });
+            });
         }());
     </script>
-</head>
-<body>
 </body>
 </html>

@@ -378,65 +378,252 @@ Emitter.prototype.hasListeners = function(event){
 
 });
 require.register("simpleio/lib/client/index.js", function(exports, require, module){
-var Client = require('./Client');
+exports.Client = require('./Client');
 
-exports.client = function(opts) {
-    return new Client(opts || {});
-};
+exports.request;
 
 });
 require.register("simpleio/lib/client/Client.js", function(exports, require, module){
 var Emitter = require('emitter'),
-    sio = require('./index');
+    sio = require('./index'),
+    Multiplexer = require('../shared/Multiplexer'),
+    $ = require('../shared/utils');
 
 function Client(opts) {
+    var self = this;
+
+    opts || (opts = {});
+    this.id = opts.id || this._getId();
     this.url = opts.url || '/simpleio';
 
-    // Interval for sending a new request.
-    this.pollInterval = opts.pollInterval || 30000;
+    this._multiplexer = new Multiplexer({duration: opts.multiplexDuration})
+        .on('error', function(err) {
+            self.emit('error', err);
+        })
+        .on('reset', function() {
+            self.request(true);
+        });
 
-    // Time to keep a request alive. It can be closed by server at any time.
-    this.duration = this.pollInterval - 5000;
-
-    // Data to send.
-    this.data = [];
+    this._connections = 0;
+    this._delivered = [];
 }
 
 Emitter(Client.prototype);
 
 module.exports = Client;
 
-Client.prototype.start = function() {
-    var self = this;
+Client.prototype.connect = function(data) {
+    this._polling = true;
+    this._baseData = data || {};
+    this._baseData.clientId = this.id;
 
-    this.request();
-    clearInterval(this._intervalId);
-    this._intervalId = setInterval(function() {
-        self.request();
-    }, this.pollInterval);
+    this.request(true);
 
     return this;
 };
 
-Client.prototype.stop = function() {
-    clearInterval(this._intervalId);
+Client.prototype.disconnect = function() {
+    this._polling = false;
+    if (this._xhr) {
+        this._xhr.abort();
+    }
 
     return this;
 };
 
-Client.prototype.request = function() {
-    sio.request({
+Client.prototype.send = function(recipient, message, callback) {
+    message.recipients = recipient;
+    this._multiplexer.add(message);
+
+    return this;
+};
+
+Client.prototype.broadcast = function(recipients, message, callback) {
+    message.recipients = recipients;
+    this._multiplexer.add(message);
+
+    return this;
+};
+
+Client.prototype.request = function(force) {
+    var self = this,
+        data = $.extend({}, this._baseData),
+        messages;
+
+    if (!this._polling) {
+        return this;
+    }
+
+    if (!force && this._connections > 0) {
+        return this;
+    }
+
+    messages = this._multiplexer.get();
+    if (messages.length) {
+        data.messages = messages;
+        this._multiplexer.reset();
+    }
+
+    if (this._delivered.length) {
+        data.delivered = this._delivered.slice();
+        this._delivered = [];
+    }
+console.log(data, this._delivered);
+
+    this._connections++;
+
+    this._xhr = sio.request({
         url: this.url,
-        type: this.data.length ? 'post' : 'get',
+        type: data.messages || data.delivered ? 'post' : 'get',
+        data: data,
+        cache: false,
+        dataType: 'json',
         success: function(res) {
-            console.log('success', arguments);
+            self._connections--;
+            $.each(res.messages, function(message) {
+                self._delivered.push(message._id);
+                self.emit('message', message);
+            });
+                console.log('delivered', self._delivered);
+            self.request();
         },
         error: function() {
-            console.log('error', arguments);
+            self._connections--;
+
+            // Roll back "messages" and "delivered" to pick up them again by
+            // next try to connect.
+            if (data.delivered) {
+                self._delivered.push.apply(self._delivered, data.delivered);
+            }
+            if (data.messages) {
+                self._multiplexer.add(data.messages);
+            }
+
+            // TODO increase exponentially, start small
+            setTimeout(function() {
+                self.request();
+            }, 10000);
         }
     });
 
     return this;
+};
+
+Client.prototype._getId = function() {
+    return Math.round(Math.random() * $.now());
+};
+
+});
+require.register("simpleio/lib/shared/Multiplexer.js", function(exports, require, module){
+var Emitter,
+    $ = require('./utils');
+
+try {
+    Emitter = require('emitter-component');
+} catch(err) {
+    Emitter = require('emitter');
+}
+
+function Multiplexer(opts) {
+    var self = this,
+        // Amount of ms for multiplexing messages before emitting.
+        duration = opts.duration || 1000;
+
+    this._messages = [];
+    this._stopped = false;
+    this._timeoutId = setInterval(function() {
+        if (self._messages.length) {
+            self.reset();
+        }
+    }, duration);
+}
+
+Emitter(Multiplexer.prototype);
+module.exports = Multiplexer;
+
+Multiplexer.prototype.add = function(messages) {
+    if (this._stopped) {
+        this.emit('error', new Error('Cannot add a message after .close'));
+        return this;
+    }
+
+    if ($.isArray(messages)) {
+        this._messages.push.apply(this._messages, messages);
+    } else {
+        this._messages.push(messages);
+    }
+
+    return this;
+};
+
+Multiplexer.prototype.reset = function() {
+    this.emit('reset');
+    this._messages = [];
+};
+
+Multiplexer.prototype.get = function() {
+    return this._messages;
+};
+
+Multiplexer.prototype.stop = function() {
+    clearInterval(this._timeoutId);
+    this._stopped = true;
+    this.removeAllListeners();
+
+    return this;
+};
+
+});
+require.register("simpleio/lib/shared/utils.js", function(exports, require, module){
+var toString = Object.prototype.toString,
+    nativeForEach = Array.prototype.forEach,
+    hasOwnProperty = Object.prototype.hasOwnProperty;
+
+exports.isArray = Array.isArray || function(obj) {
+    return toString.call(obj) == '[object Array]';
+};
+
+exports.now = Date.now || function() {
+    return new Date().getTime();
+};
+
+// The cornerstone, an `each` implementation, aka `forEach`.
+// Handles objects with the built-in `forEach`, arrays, and raw objects.
+// Delegates to **ECMAScript 5**'s native `forEach` if available.
+// Slightly modified underscores implementation.
+exports.each = function(obj, iterator, context) {
+    var i, key;
+
+    if (obj == null) return;
+    if (nativeForEach && obj.forEach === nativeForEach) {
+        obj.forEach(iterator, context);
+    } else if (obj.length === +obj.length) {
+        for (i = 0, l = obj.length; i < l; i++) {
+            iterator.call(context, obj[i], i, obj);
+        }
+    } else {
+        for (key in obj) {
+            if (exports.has(obj, key)) {
+                iterator.call(context, obj[key], key, obj);
+            }
+        }
+    }
+};
+
+exports.has = function(obj, key) {
+    return hasOwnProperty.call(obj, key);
+};
+
+exports.extend = function(target, source) {
+    var prop;
+
+    if (target && source) {
+        for (prop in source) {
+            target[prop] = source[prop];
+        }
+    }
+
+    return target;
 };
 
 });

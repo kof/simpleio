@@ -15,7 +15,9 @@
   "main": "lib/client/index.js",
   "scripts": [
     "lib/client/index.js",
-    "lib/client/Client.js"
+    "lib/client/Client.js",
+    "lib/shared/Multiplexer.js",
+    "lib/shared/utils.js"
   ],
   "repo": "kof/simple.io",
   "license": "MIT"

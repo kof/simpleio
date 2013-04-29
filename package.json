@@ -13,11 +13,13 @@
     "keywords": [],
     "engines": {},
     "dependencies": {
-        "mubsub": "0.2.0"
+        "mubsub": "0.2.0",
+        "emitter-component": "1.0.0"
     },
     "devDependencies": {
         "uglify-js": "*",
-        "express": "3.2.0"
+        "express": "3.2.0",
+        "commander": "1.1.1"
     },
     "scripts": {},
     "licenses": [
