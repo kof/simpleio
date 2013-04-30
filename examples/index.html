@@ -17,8 +17,8 @@
                     .connect({
                         userId: $('#name').val()
                     })
-                    .on('message', function(message) {
-                        console.log('new message', message);
+                    .on('data', function(data) {
+                        console.log('new message:', data);
                     })
                     .on('error', function(err) {
                         console.log('error', err);

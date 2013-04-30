@@ -393,7 +393,7 @@ function Client(opts) {
     var self = this;
 
     opts || (opts = {});
-    this.id = opts.id || this._getId();
+    this.id = opts.id || $.id();
     this.url = opts.url || '/simpleio';
 
     this._multiplexer = new Multiplexer({duration: opts.multiplexDuration})
@@ -415,7 +415,7 @@ module.exports = Client;
 Client.prototype.connect = function(data) {
     this._polling = true;
     this._baseData = data || {};
-    this._baseData.clientId = this.id;
+    this._baseData.client = this.id;
 
     this.request(true);
 
@@ -465,7 +465,7 @@ Client.prototype.request = function(force) {
     }
 
     if (this._delivered.length) {
-        data.delivered = this._delivered.slice();
+        data.delivered = this._delivered;
         this._delivered = [];
     }
 
@@ -479,13 +479,18 @@ Client.prototype.request = function(force) {
         dataType: 'json',
         success: function(res) {
             self._connections--;
+
+            if (res.messages.length) {
+                self.emit('messages', res.messages);
+            }
             $.each(res.messages, function(message) {
                 if (message && message.data) {
-                    self._delivered.push(message._id);
+                    self._delivered.push(message.id);
                     self.emit('message', message);
+                    self.emit('data', message.data);
                 }
             });
-            self.request();
+            self.request(self._delivered.length);
         },
         error: function() {
             self._connections--;
@@ -509,10 +514,6 @@ Client.prototype.request = function(force) {
     return this;
 };
 
-Client.prototype._getId = function() {
-    return Math.round(Math.random() * $.now());
-};
-
 });
 require.register("simpleio/lib/shared/Multiplexer.js", function(exports, require, module){
 var Emitter,
@@ -527,7 +528,7 @@ try {
 function Multiplexer(opts) {
     var self = this,
         // Amount of ms for multiplexing messages before emitting.
-        duration = opts.duration || 1000;
+        duration = opts.duration || 10;
 
     this._messages = [];
     this._stopped = false;
@@ -549,7 +550,7 @@ Multiplexer.prototype.add = function(messages) {
 
     if ($.isArray(messages)) {
         this._messages.push.apply(this._messages, messages);
-    } else {
+    } else if (messages) {
         this._messages.push(messages);
     }
 
@@ -577,7 +578,8 @@ Multiplexer.prototype.stop = function() {
 require.register("simpleio/lib/shared/utils.js", function(exports, require, module){
 var toString = Object.prototype.toString,
     nativeForEach = Array.prototype.forEach,
-    hasOwnProperty = Object.prototype.hasOwnProperty;
+    hasOwnProperty = Object.prototype.hasOwnProperty,
+    slice = Array.prototype.slice;
 
 exports.isArray = Array.isArray || function(obj) {
     return toString.call(obj) == '[object Array]';
@@ -590,7 +592,6 @@ exports.now = Date.now || function() {
 // The cornerstone, an `each` implementation, aka `forEach`.
 // Handles objects with the built-in `forEach`, arrays, and raw objects.
 // Delegates to **ECMAScript 5**'s native `forEach` if available.
-// Slightly modified underscores implementation.
 exports.each = function(obj, iterator, context) {
     var i, key;
 
@@ -614,16 +615,22 @@ exports.has = function(obj, key) {
     return hasOwnProperty.call(obj, key);
 };
 
-exports.extend = function(target, source) {
-    var prop;
+exports.extend = function(obj) {
+    exports.each(slice.call(arguments, 1), function(source) {
+        var prop;
 
-    if (target && source) {
-        for (prop in source) {
-            target[prop] = source[prop];
+        if (source) {
+            for (prop in source) {
+                obj[prop] = source[prop];
+            }
         }
-    }
+    });
 
-    return target;
+    return obj;
+};
+
+exports.id = function() {
+    return Math.round(Math.random() * exports.now());
 };
 
 });

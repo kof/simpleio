@@ -4,9 +4,16 @@ var express = require('express'),
     fs = require('fs'),
     program = require('commander');
 
-var sio;
+var sio,
+    Adapter;
 
-sio = new simpleio.Server()
+program
+    .option('-a, --adapter <adapter>', 'adapter to use Memory|Mongo', String, 'Memory')
+    .parse(process.argv);
+
+Adapter = require('../lib/server/adapters/' + program.adapter);
+
+sio = new simpleio.Server({adapter: new Adapter})
     .on('error', console.error);
 
 express()
@@ -15,8 +22,8 @@ express()
     .all('/simpleio', function(req, res, next) {
         var connection;
 
-        connection = sio.connect({
-            clientId: req.param('clientId'),
+        connection = sio.connect(req, {
+            client: req.param('client'),
             messages: req.param('messages'),
             delivered: req.param('delivered'),
             events: req.param('events'),
@@ -35,21 +42,20 @@ express()
     .use(express.static(__dirname + '/..'))
     .listen(3000);
 
-console.log('Running on localhost:3000');
+console.log('Running on localhost:3000', ', using adapter', program.adapter);
 
-program.prompt('Type recipient id:', function(recipient) {
+(function prompt() {
+    program.prompt('Type recipient id:', function(recipient) {
+        program.prompt('Message:', function(data) {
+            console.time('delivery time');
+            sio.send(recipient, data, function(err, delivered) {
+                if (err) return console.log('Error', err);
 
-    program.prompt('Message:', function(body) {
-        console.time('delivery time');
-        sio.send(recipient, {
-            event: 'myevent',
-            data: body
-        }, function(err, delivered) {
-            if (err) return console.log('Error', err);
-
-            console.log('Delivered', delivered);
-            console.timeEnd('delivery time');
+                console.log('Delivered', delivered);
+                console.timeEnd('delivery time');
+                prompt();
+            });
         });
     });
-});
+}());
 

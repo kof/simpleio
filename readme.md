@@ -8,8 +8,7 @@
 ## Todo
 - ensure index
 - broadcast
-- abstract away json api of mongo, listen to events locally too
-- make Multiplexer shared, use component-emitter
+- close connection if request closed
 
 ## Message format
 
