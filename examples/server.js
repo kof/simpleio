@@ -46,7 +46,17 @@ console.log('Running on localhost:3000', ', using adapter', program.adapter);
 
 (function prompt() {
     program.prompt('Type recipient id:', function(recipient) {
+        recipient = recipient.trim();
+        if (!recipient) {
+            return prompt();
+        }
+
         program.prompt('Message:', function(data) {
+            data = data.trim();
+            if (!data) {
+                return prompt();
+            }
+
             console.time('delivery time');
             sio.send(recipient, data, function(err, delivered) {
                 if (err) return console.log('Error', err);
