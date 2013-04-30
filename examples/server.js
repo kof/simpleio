@@ -40,6 +40,7 @@ console.log('Running on localhost:3000');
 program.prompt('Type recipient id:', function(recipient) {
 
     program.prompt('Message:', function(body) {
+        console.time('delivery time');
         sio.send(recipient, {
             event: 'myevent',
             data: body
@@ -47,6 +48,7 @@ program.prompt('Type recipient id:', function(recipient) {
             if (err) return console.log('Error', err);
 
             console.log('Delivered', delivered);
+            console.timeEnd('delivery time');
         });
     });
 });

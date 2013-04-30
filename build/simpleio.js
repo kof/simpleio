@@ -468,7 +468,6 @@ Client.prototype.request = function(force) {
         data.delivered = this._delivered.slice();
         this._delivered = [];
     }
-console.log(data, this._delivered);
 
     this._connections++;
 
@@ -481,10 +480,11 @@ console.log(data, this._delivered);
         success: function(res) {
             self._connections--;
             $.each(res.messages, function(message) {
-                self._delivered.push(message._id);
-                self.emit('message', message);
+                if (message && message.data) {
+                    self._delivered.push(message._id);
+                    self.emit('message', message);
+                }
             });
-                console.log('delivered', self._delivered);
             self.request();
         },
         error: function() {
