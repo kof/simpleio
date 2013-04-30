@@ -29,3 +29,7 @@
 
 
 
+## Run bench
+
+    npm i bench
+    node-bench bench/adapter

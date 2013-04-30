@@ -22,11 +22,10 @@ express()
     .all('/simpleio', function(req, res, next) {
         var connection;
 
-        connection = sio.connect(req, {
+        connection = sio.connect({
             client: req.param('client'),
             messages: req.param('messages'),
             delivered: req.param('delivered'),
-            events: req.param('events'),
             // You might want to get recipient id from your session.
             recipient: req.param('userId')
         });
