@@ -8,9 +8,7 @@
 ## Todo
 - ensure index
 - broadcast
-- close connection if request closed
-- bundle mubsub if safe:true is not fixed
-- connect -> open etc.
+- close connection if request closed ?
 - send(clientId)
 
 ## Message format

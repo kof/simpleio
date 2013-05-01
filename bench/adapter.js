@@ -29,13 +29,11 @@ function sendAndConfirm(adapter, server1, server2, done) {
         })
         .on('error', console.error);
 
-    setTimeout(function() {
-        server1.send(opts.recipient, data, function(err, delivered) {
-            if (err) return console.error(err);
-            if (!delivered) return console.error('Undelivered ' + adapter, opts);
-            done();
-        });
-    }, 200);
+    server1.send(opts.recipient, data, function(err, delivered) {
+        if (err) return console.error(err);
+        if (!delivered) return console.error('Undelivered ' + adapter, opts);
+        done();
+    });
 }
 
 compare['send and receive using memory adapter'] = function(done) {
