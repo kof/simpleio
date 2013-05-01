@@ -15,15 +15,15 @@ function sendAndConfirm(adapter, server1, server2, done) {
     };
 
     server1
-        .connect(opts)
-        .on('response', function(data) {
+        .open(opts)
+        .on('close', function(data) {
             opts.delivered = data.messages.map(function(message) {
                 return message.id;
             });
 
             process.nextTick(function() {
                 server2
-                    .connect(opts)
+                    .open(opts)
                     .on('error', console.error);
             });
         })

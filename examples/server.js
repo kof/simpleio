@@ -22,7 +22,7 @@ express()
     .all('/simpleio', function(req, res, next) {
         var connection;
 
-        connection = sio.connect({
+        connection = sio.open({
             client: req.param('client'),
             messages: req.param('messages'),
             delivered: req.param('delivered'),
@@ -31,7 +31,7 @@ express()
         });
 
         connection
-            .once('response', function(data) {
+            .once('close', function(data) {
                 res.json(data);
             })
             .once('error', next)
