@@ -1,11 +1,5 @@
 
 /**
- * Module dependencies.
- */
-
-var index = require('indexof');
-
-/**
  * Expose `Emitter`.
  */
 
@@ -108,7 +102,7 @@ Emitter.prototype.removeAllListeners = function(event, fn){
   }
 
   // remove specific handler
-  var i = index(callbacks, fn._off || fn);
+  var i = callbacks.indexOf(fn._off || fn);
   if (~i) callbacks.splice(i, 1);
   return this;
 };

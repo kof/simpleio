@@ -1,4 +1,5 @@
 node_modules
+components
 .DS_Store
 npm-debug.log
 tmp

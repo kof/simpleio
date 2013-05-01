@@ -11,6 +11,16 @@
 - close connection if request closed ?
 - send(clientId)
 
+## Install
+
+    npm i simpleio
+
+    or
+
+    git clone ...
+    make install
+
+
 ## Message format
 
 ### Simpleio#send
