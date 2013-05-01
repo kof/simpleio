@@ -528,7 +528,7 @@ try {
 function Multiplexer(opts) {
     var self = this,
         // Amount of ms for multiplexing messages before emitting.
-        duration = opts.duration || 10;
+        duration = opts.duration || 500;
 
     this._messages = [];
     this._stopped = false;

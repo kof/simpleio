@@ -2,18 +2,19 @@ var sio = require('..'),
     Mongo = require('../lib/server/adapters/Mongo');
 
 var compare = exports.compare = {},
-    id = Date.now(),
+    id = 0,
     data = 'test data';
 
-function sendAndConfirm(server, done) {
+function sendAndConfirm(adapter, server1, server2, done) {
     var opts;
 
+    id++;
     opts = {
-        client: ++id,
-        recipient: ++id
+        client: id,
+        recipient: id
     };
 
-    server
+    server1
         .connect(opts)
         .on('response', function(data) {
             opts.delivered = data.messages.map(function(message) {
@@ -21,43 +22,31 @@ function sendAndConfirm(server, done) {
             });
 
             process.nextTick(function() {
-                server
+                server2
                     .connect(opts)
                     .on('error', console.error);
             });
         })
         .on('error', console.error);
 
-    server.send(opts.recipient, data, function(err, delivered) {
-        if (err) return console.error(err);
-        if (!delivered) return console.error('Undelivered', opts);
-        done();
-    });
+    setTimeout(function() {
+        server1.send(opts.recipient, data, function(err, delivered) {
+            if (err) return console.error(err);
+            if (!delivered) return console.error('Undelivered ' + adapter, opts);
+            done();
+        });
+    }, 200);
 }
 
 compare['send and receive using memory adapter'] = function(done) {
     var server = new sio.Server({multiplexDuration: 1});
 
-    sendAndConfirm(server, done);
+    sendAndConfirm('memory', server, server, done);
 };
 
 compare['send and receive using mongo adapter'] = function(done) {
-    var adapter = new Mongo,
-        server;
+    var server1 = new sio.Server({multiplexDuration: 1, adapter: new Mongo}),
+        server2 = new sio.Server({multiplexDuration: 1, adapter: new Mongo});
 
-    // Override local event emitting, because otherwise we are not
-    // comparing pure mongodb performance, but node.
-    adapter.emit = function(event, fn) {
-        if (event == 'error') {
-            return Mongo.prototype.emit.apply(this, arguments);
-        }
-
-        return this;
-    };
-
-    server = new sio.Server({multiplexDuration: 1, adapter: adapter}),
-
-    sendAndConfirm(server, function() {
-        done();
-    });
+    sendAndConfirm('mongo', server1, server2, done);
 };

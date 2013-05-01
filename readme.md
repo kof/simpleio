@@ -9,6 +9,9 @@
 - ensure index
 - broadcast
 - close connection if request closed
+- bundle mubsub if safe:true is not fixed
+- connect -> open etc.
+- send(clientId)
 
 ## Message format
 
