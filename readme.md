@@ -8,8 +8,6 @@
 ## Todo
 - ensure index
 - broadcast
-- close connection if request closed ?
-- send(clientId)
 
 ## Install
 
@@ -25,18 +23,8 @@
 
 ### Simpleio#send
 
-    {
-        recipients: [ObjectId|Array],
-        event: String
-    }
+### Simpleio#open
 
-### Simpleio#connect
-
-    {
-        recipient: ObjectId,
-        delivered: [ObjectId],
-
-    }
 
 
 

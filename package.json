@@ -13,13 +13,14 @@
     "keywords": [],
     "engines": {},
     "dependencies": {
-        "mubsub": "https://github.com/kof/mubsub/tarball/dev",
+        "mubsub": "0.2.2",
         "emitter-component": "1.0.0"
     },
     "devDependencies": {
         "uglify-js": "*",
         "express": "3.2.0",
-        "commander": "1.1.1"
+        "commander": "1.1.1",
+        "bench": "0.3.5"
     },
     "scripts": {},
     "licenses": [

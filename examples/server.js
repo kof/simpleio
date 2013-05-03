@@ -5,7 +5,8 @@ var express = require('express'),
     program = require('commander');
 
 var sio,
-    Adapter;
+    Adapter,
+    enabledUsers = ['aaa', 'bbb', 'ccc', 'ddd'];
 
 program
     .option('-a, --adapter <adapter>', 'adapter to use Memory|Mongo', String, 'Memory')
@@ -19,15 +20,21 @@ sio = new simpleio.Server({adapter: new Adapter})
 express()
     .use(express.query())
     .use(express.bodyParser())
+    .use(express.cookieParser())
+    .use(express.session({secret: '123456'}))
     .all('/simpleio', function(req, res, next) {
-        var connection;
+        var connection,
+            userId = req.param('userId');
+
+        if (enabledUsers.indexOf(userId) < 0 ) {
+            return res.send('Not authorized.', 401);
+        }
 
         connection = sio.open({
+            recipient: userId,
             client: req.param('client'),
             messages: req.param('messages'),
-            delivered: req.param('delivered'),
-            // You might want to get recipient id from your session.
-            recipient: req.param('userId')
+            delivered: req.param('delivered')
         });
 
         connection

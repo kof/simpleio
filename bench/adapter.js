@@ -1,9 +1,11 @@
 var sio = require('..'),
-    Mongo = require('../lib/server/adapters/Mongo');
+    Mongo = require('../lib/server/adapters/Mongo'),
+    bench = require('bench');
 
 var compare = exports.compare = {},
     id = 0,
-    data = 'test data';
+    data = 'test data',
+    stats = {memory: 0, mongo: 0};
 
 function sendAndConfirm(adapter, server1, server2, done) {
     var opts;
@@ -29,22 +31,33 @@ function sendAndConfirm(adapter, server1, server2, done) {
         })
         .on('error', console.error);
 
-    server1.send(opts.recipient, data, function(err, delivered) {
-        if (err) return console.error(err);
-        if (!delivered) return console.error('Undelivered ' + adapter, opts);
-        done();
+    process.nextTick(function() {
+        stats[adapter]++;
+        server1.send(opts.recipient, data, function(err, delivered) {
+            if (err) return console.error(err);
+            if (!delivered) return console.error('Undelivered ' + adapter, opts);
+            done();
+        });
     });
 }
 
-compare['send and receive using memory adapter'] = function(done) {
+compare.memory = function(done) {
     var server = new sio.Server({multiplexDuration: 1});
 
     sendAndConfirm('memory', server, server, done);
 };
 
-compare['send and receive using mongo adapter'] = function(done) {
-    var server1 = new sio.Server({multiplexDuration: 1, adapter: new Mongo}),
-        server2 = new sio.Server({multiplexDuration: 1, adapter: new Mongo});
+var mongoServer1 = new sio.Server({multiplexDuration: 1, adapter: new Mongo}),
+    mongoServer2 = new sio.Server({multiplexDuration: 1, adapter: new Mongo});
 
-    sendAndConfirm('mongo', server1, server2, done);
+compare.mongo = function(done) {
+    sendAndConfirm('mongo', mongoServer1, mongoServer2, done);
 };
+
+exports.done = function(data) {
+    bench.show(data);
+    console.log(stats);
+};
+
+// Wait for connection
+setTimeout(bench.runMain, 500);
