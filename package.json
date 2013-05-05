@@ -13,7 +13,7 @@
     "keywords": [],
     "engines": {},
     "dependencies": {
-        "mubsub": "0.2.2",
+        "mubsub": "1.0.0",
         "emitter-component": "1.0.0"
     },
     "devDependencies": {
