@@ -1,6 +1,6 @@
 {
-    "name": "simpleio",
-    "description": "Minimalistic xhr long polling based communication.",
+    "name": "simpleio-transport",
+    "description": "Transport layer for simpleio.",
     "version": "0.1.0",
     "author": {
         "name": "Oleg Slobodskoi",
@@ -8,7 +8,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git@github.com:kof/simpleio.git"
+        "url": "git@github.com:kof/simpleio-transport.git"
     },
     "keywords": [],
     "engines": {},

@@ -4,7 +4,7 @@ var express = require('express'),
     fs = require('fs'),
     program = require('commander');
 
-var sio,
+var sioServer,
     Adapter,
     enabledUsers = ['aaa', 'bbb', 'ccc', 'ddd'];
 
@@ -14,7 +14,7 @@ program
 
 Adapter = require('../lib/server/adapters/' + program.adapter);
 
-sio = new simpleio.Server({adapter: new Adapter})
+sioServer = new simpleio.Server({adapter: new Adapter})
     .on('error', console.error);
 
 express()
@@ -30,7 +30,7 @@ express()
             return res.send('Not authorized.', 401);
         }
 
-        connection = sio.open({
+        connection = sioServer.open({
             recipient: userId,
             client: req.param('client'),
             messages: req.param('messages'),
@@ -64,7 +64,7 @@ console.log('Running on localhost:3000', ', using adapter', program.adapter);
             }
 
             console.time('delivery time');
-            sio.send(recipient, data, function(err, delivered) {
+            sioServer.send(recipient, data, function(err, delivered) {
                 if (err) return console.log('Error', err);
 
                 console.log('Delivered', delivered);
