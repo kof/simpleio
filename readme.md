@@ -6,7 +6,6 @@
 - multiplexing on the server and client
 
 ## Todo
-- ensure index
 - broadcast
 - client to server
 - retry by errors with exponential timeout

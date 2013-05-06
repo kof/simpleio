@@ -57,6 +57,7 @@ compare.mongo = function(done) {
 exports.done = function(data) {
     bench.show(data);
     console.log(stats);
+    process.exit();
 };
 
 // Wait for connection
