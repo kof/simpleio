@@ -1,6 +1,6 @@
 <html>
 <head>
-    <script src="../build/simpleio.js"></script>
+    <script src="../build/simpleio-transport.js"></script>
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 
 </head>
@@ -12,9 +12,9 @@
 
     <script>
         (function() {
-            simpleio.request = jQuery.ajax;
+            simpleioTransport.request = jQuery.ajax;
 
-            var client = new simpleio.Client();
+            var client = new simpleioTransport.Client();
             $('#connect').click(function() {
                 client
                     .connect({

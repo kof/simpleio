@@ -1,8 +1,8 @@
 
 build:
 	rm -fr ./build
-	component build -s simpleio -n simpleio
-	./node_modules/.bin/uglifyjs < ./build/simpleio.js > ./build/simpleio.min.js
+	component build -s simpleioTransport -n simpleio-transport
+	./node_modules/.bin/uglifyjs < ./build/simpleio-transport.js > ./build/simpleio-transport.min.js
 
 install:
 	rm -fr ./components

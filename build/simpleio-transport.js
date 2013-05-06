@@ -200,25 +200,7 @@ require.relative = function(parent) {
 
   return localRequire;
 };
-require.register("component-indexof/index.js", function(exports, require, module){
-
-var indexOf = [].indexOf;
-
-module.exports = function(arr, obj){
-  if (indexOf) return arr.indexOf(obj);
-  for (var i = 0; i < arr.length; ++i) {
-    if (arr[i] === obj) return i;
-  }
-  return -1;
-};
-});
 require.register("component-emitter/index.js", function(exports, require, module){
-
-/**
- * Module dependencies.
- */
-
-var index = require('indexof');
 
 /**
  * Expose `Emitter`.
@@ -323,7 +305,7 @@ Emitter.prototype.removeAllListeners = function(event, fn){
   }
 
   // remove specific handler
-  var i = index(callbacks, fn._off || fn);
+  var i = callbacks.indexOf(fn._off || fn);
   if (~i) callbacks.splice(i, 1);
   return this;
 };
@@ -377,13 +359,13 @@ Emitter.prototype.hasListeners = function(event){
 };
 
 });
-require.register("simpleio/lib/client/index.js", function(exports, require, module){
+require.register("simpleio-transport/lib/client/index.js", function(exports, require, module){
 exports.Client = require('./Client');
 
 exports.request;
 
 });
-require.register("simpleio/lib/client/Client.js", function(exports, require, module){
+require.register("simpleio-transport/lib/client/Client.js", function(exports, require, module){
 var Emitter = require('emitter'),
     sio = require('./index'),
     Multiplexer = require('../shared/Multiplexer'),
@@ -482,14 +464,11 @@ Client.prototype.request = function(force) {
 
             if (res.messages.length) {
                 self.emit('messages', res.messages);
-            }
-            $.each(res.messages, function(message) {
-                if (message && message.data) {
+                $.each(res.messages, function(message) {
                     self._delivered.push(message.id);
                     self.emit('message', message);
-                    self.emit('data', message.data);
-                }
-            });
+                });
+            }
             self.request(self._delivered.length);
         },
         error: function() {
@@ -515,7 +494,7 @@ Client.prototype.request = function(force) {
 };
 
 });
-require.register("simpleio/lib/shared/Multiplexer.js", function(exports, require, module){
+require.register("simpleio-transport/lib/shared/Multiplexer.js", function(exports, require, module){
 var Emitter,
     $ = require('./utils');
 
@@ -575,7 +554,7 @@ Multiplexer.prototype.stop = function() {
 };
 
 });
-require.register("simpleio/lib/shared/utils.js", function(exports, require, module){
+require.register("simpleio-transport/lib/shared/utils.js", function(exports, require, module){
 var toString = Object.prototype.toString,
     nativeForEach = Array.prototype.forEach,
     hasOwnProperty = Object.prototype.hasOwnProperty,
@@ -634,16 +613,15 @@ exports.id = function() {
 };
 
 });
-require.alias("component-emitter/index.js", "simpleio/deps/emitter/index.js");
+require.alias("component-emitter/index.js", "simpleio-transport/deps/emitter/index.js");
 require.alias("component-emitter/index.js", "emitter/index.js");
-require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
 
-require.alias("simpleio/lib/client/index.js", "simpleio/index.js");
+require.alias("simpleio-transport/lib/client/index.js", "simpleio-transport/index.js");
 
 if (typeof exports == "object") {
-  module.exports = require("simpleio");
+  module.exports = require("simpleio-transport");
 } else if (typeof define == "function" && define.amd) {
-  define(function(){ return require("simpleio"); });
+  define(function(){ return require("simpleio-transport"); });
 } else {
-  this["simpleio"] = require("simpleio");
+  this["simpleioTransport"] = require("simpleio-transport");
 }})();
