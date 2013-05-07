@@ -364,6 +364,10 @@ exports.Client = require('./Client');
 
 exports.request;
 
+exports.create = function(opts) {
+    return new exports.Client(opts);
+};
+
 });
 require.register("simpleio-transport/lib/client/Client.js", function(exports, require, module){
 var Emitter = require('emitter'),
@@ -463,9 +467,11 @@ Client.prototype.request = function(force) {
             self._connections--;
 
             if (res.messages.length) {
-                self.emit('messages', res.messages);
                 $.each(res.messages, function(message) {
-                    self._delivered.push(message.id);
+                    if (message.data.confirmation) self._delivered.push(message.id);
+                    if (message.data.event) {
+                        self.emit(message.data.event, message.data.data);
+                    }
                     self.emit('message', message);
                 });
             }
@@ -623,5 +629,5 @@ if (typeof exports == "object") {
 } else if (typeof define == "function" && define.amd) {
   define(function(){ return require("simpleio-transport"); });
 } else {
-  this["simpleioTransport"] = require("simpleio-transport");
+  this["simpleio"] = require("simpleio-transport");
 }})();

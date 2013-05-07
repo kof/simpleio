@@ -1,7 +1,7 @@
 {
   "name": "simpleio-transport",
   "version": "0.1.0",
-  "description": "Transport layer for simpleio.",
+  "description": "Simple xhr-polling based communication.",
   "author": {
     "name": "Oleg Slobodskoi",
     "email": "oleg008@gmail.com"
@@ -23,6 +23,6 @@
     "lib/shared/Multiplexer.js",
     "lib/shared/utils.js"
   ],
-  "repo": "kof/simpleio-transport",
+  "repo": "kof/simpleio",
   "license": "MIT"
 }
