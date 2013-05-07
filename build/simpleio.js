@@ -378,33 +378,36 @@ var Emitter = require('emitter'),
 function Client(opts) {
     var self = this;
 
-    opts || (opts = {});
-    this.id = opts.id || $.id();
-    this.url = opts.url || '/simpleio';
+    this.options = opts = $.extend({}, Client.options, opts);
     this.ajax = opts.ajax;
-
     this._multiplexer = new Multiplexer({duration: opts.multiplexDuration})
         .on('error', function(err) {
             self.emit('error', err);
         })
         .on('reset', function() {
-            self.request(true);
+            self._open(true);
         });
 
     this._connections = 0;
     this._delivered = [];
+    this._reconnectionAttempts = 1;
 }
 
-Emitter(Client.prototype);
+Client.options = {
+    url: '/simpleio',
+    ajax: null,
+    reconnectionDelay: 1000,
+    maxReconnectionDelay: 10000,
+    multiplexDuration: null
+};
 
+Emitter(Client.prototype);
 module.exports = Client;
 
 Client.prototype.connect = function(data) {
     this._polling = true;
     this._baseData = data || {};
-    this._baseData.client = this.id;
-
-    this.request(true);
+    this._open(true);
 
     return this;
 };
@@ -432,7 +435,7 @@ Client.prototype.broadcast = function(recipients, message, callback) {
     return this;
 };
 
-Client.prototype.request = function(force) {
+Client.prototype._open = function(force) {
     var self = this,
         data = $.extend({}, this._baseData),
         messages;
@@ -459,45 +462,74 @@ Client.prototype.request = function(force) {
     this._connections++;
 
     this._xhr = this.ajax({
-        url: this.url,
+        url: this.options.url,
         type: data.messages || data.delivered ? 'post' : 'get',
         data: data,
         cache: false,
         dataType: 'json',
         success: function(res) {
-            self._connections--;
-
-            if (res.messages.length) {
-                $.each(res.messages, function(message) {
-                    if (message.data.confirmation) self._delivered.push(message.id);
-                    if (message.data.event) {
-                        self.emit(message.data.event, message.data.data);
-                    }
-                    self.emit('message', message);
-                });
-            }
-            self.request(self._delivered.length);
+            self._onSuccess(res);
         },
         error: function() {
-            self._connections--;
-
-            // Roll back "messages" and "delivered" to pick up them again by
-            // next try to connect.
-            if (data.delivered) {
-                self._delivered.push.apply(self._delivered, data.delivered);
-            }
-            if (data.messages) {
-                self._multiplexer.add(data.messages);
-            }
-
-            // TODO increase exponentially, start small
-            setTimeout(function() {
-                self.request();
-            }, 10000);
+            self._onError(data);
         }
     });
 
     return this;
+};
+
+/**
+ * Reconnect with incrementally delay.
+ *
+ * @return {Client} this
+ */
+Client.prototype._reopen = function() {
+    var self = this,
+        delay;
+
+    this._reconnectionAttempts++;
+    delay = this._reconnectionAttempts * this.options.reconnectionDelay;
+    delay = Math.min(delay, this.options.maxReconnectionDelay);
+
+    setTimeout(function() {
+        self._open();
+    }, delay);
+
+    return this;
+};
+
+Client.prototype._onError = function(data) {
+    this._connections--;
+
+    // Roll back "messages" and "delivered" to pick up them again by
+    // next try to connect.
+    if (data.delivered) {
+        this._delivered.push.apply(this._delivered, data.delivered);
+    }
+    if (data.messages) {
+        this._multiplexer.add(data.messages);
+    }
+
+    this._reopen();
+};
+
+Client.prototype._onSuccess = function(res) {
+    var self = this;
+
+    this._connections--;
+    this._reconnectionAttempts = 1;
+
+    if (res.messages.length) {
+        $.each(res.messages, function(message) {
+            if (message.data.confirmation) self._delivered.push(message.id);
+            if (message.data.event) {
+                self.emit(message.data.event, message.data.data);
+            }
+            self.emit('message', message);
+        });
+    }
+
+    this._open(this._delivered.length);
 };
 
 });

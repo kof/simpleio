@@ -24,7 +24,8 @@ express()
     .use(express.session({secret: '123456'}))
     .all('/simpleio', function(req, res, next) {
         var connection,
-            userId = req.param('userId');
+            userId = req.param('userId'),
+            client = req.session.client || (req.session.client = simpleio.utils.id());
 
         if (enabledUsers.indexOf(userId) < 0 ) {
             return res.send('Not authorized.', 401);
@@ -32,7 +33,7 @@ express()
 
         connection = sio.open({
             recipient: userId,
-            client: req.param('client'),
+            client: client,
             messages: req.param('messages'),
             delivered: req.param('delivered')
         });
