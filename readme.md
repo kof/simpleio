@@ -1,8 +1,8 @@
 ## Features
 
-- optimized for horizontal scalability
-- support for router without sticky sessions (f.e. Heroku)
-- secure message delivery (built-in delivery confirmation)
+- optimized for horizontal scaling
+- support for router/balancer without sticky sessions (f.e. Heroku)
+- reliable message delivery (built-in delivery confirmation)
 - multiplexing on the server and client
 
 ## Todo

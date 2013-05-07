@@ -14,7 +14,7 @@
         (function() {
             simpleio.request = jQuery.ajax;
 
-            window.client = simpleio.create();
+            window.client = simpleio.create({ajax: jQuery.ajax});
 
             $('#connect').click(function() {
                 client

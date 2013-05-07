@@ -381,6 +381,7 @@ function Client(opts) {
     opts || (opts = {});
     this.id = opts.id || $.id();
     this.url = opts.url || '/simpleio';
+    this.ajax = opts.ajax;
 
     this._multiplexer = new Multiplexer({duration: opts.multiplexDuration})
         .on('error', function(err) {
@@ -457,7 +458,7 @@ Client.prototype.request = function(force) {
 
     this._connections++;
 
-    this._xhr = sio.request({
+    this._xhr = this.ajax({
         url: this.url,
         type: data.messages || data.delivered ? 'post' : 'get',
         data: data,
