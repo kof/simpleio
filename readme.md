@@ -6,9 +6,10 @@
 - multiplexing on the server and client
 
 ## Todo
-- broadcast
-- client to server
 - retry by errors with exponential timeout
+- client to server messaging
+- tests
+- documentation
 
 ## Install
 
