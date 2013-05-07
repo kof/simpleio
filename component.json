@@ -1,5 +1,5 @@
 {
-  "name": "simpleio-transport",
+  "name": "simpleio",
   "version": "0.1.0",
   "description": "Simple xhr-polling based communication.",
   "author": {

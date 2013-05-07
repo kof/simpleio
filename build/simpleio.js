@@ -359,7 +359,7 @@ Emitter.prototype.hasListeners = function(event){
 };
 
 });
-require.register("simpleio-transport/lib/client/index.js", function(exports, require, module){
+require.register("simpleio/lib/client/index.js", function(exports, require, module){
 exports.Client = require('./Client');
 
 exports.request;
@@ -369,7 +369,7 @@ exports.create = function(opts) {
 };
 
 });
-require.register("simpleio-transport/lib/client/Client.js", function(exports, require, module){
+require.register("simpleio/lib/client/Client.js", function(exports, require, module){
 var Emitter = require('emitter'),
     sio = require('./index'),
     Multiplexer = require('../shared/Multiplexer'),
@@ -500,7 +500,7 @@ Client.prototype.request = function(force) {
 };
 
 });
-require.register("simpleio-transport/lib/shared/Multiplexer.js", function(exports, require, module){
+require.register("simpleio/lib/shared/Multiplexer.js", function(exports, require, module){
 var Emitter,
     $ = require('./utils');
 
@@ -560,7 +560,7 @@ Multiplexer.prototype.stop = function() {
 };
 
 });
-require.register("simpleio-transport/lib/shared/utils.js", function(exports, require, module){
+require.register("simpleio/lib/shared/utils.js", function(exports, require, module){
 var toString = Object.prototype.toString,
     nativeForEach = Array.prototype.forEach,
     hasOwnProperty = Object.prototype.hasOwnProperty,
@@ -619,15 +619,15 @@ exports.id = function() {
 };
 
 });
-require.alias("component-emitter/index.js", "simpleio-transport/deps/emitter/index.js");
+require.alias("component-emitter/index.js", "simpleio/deps/emitter/index.js");
 require.alias("component-emitter/index.js", "emitter/index.js");
 
-require.alias("simpleio-transport/lib/client/index.js", "simpleio-transport/index.js");
+require.alias("simpleio/lib/client/index.js", "simpleio/index.js");
 
 if (typeof exports == "object") {
-  module.exports = require("simpleio-transport");
+  module.exports = require("simpleio");
 } else if (typeof define == "function" && define.amd) {
-  define(function(){ return require("simpleio-transport"); });
+  define(function(){ return require("simpleio"); });
 } else {
-  this["simpleio"] = require("simpleio-transport");
+  this["simpleio"] = require("simpleio");
 }})();
