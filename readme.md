@@ -6,8 +6,7 @@
 - multiplexing on the server and client
 
 ## Todo
-- retry by errors with exponential timeout
-- client to server messaging
+- Memory store missing functions
 - tests
 - documentation
 

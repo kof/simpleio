@@ -8,7 +8,14 @@
     <h2>Open your console</h2>
 
     Enabled users are: aaa, bbb, ccc, ddd
-    <input type="text" id="name"/><button id="connect">Connect</button>
+    <br />
+    <input type="text" id="name"/>
+    <button id="connect">Connect</button>
+    <br />
+    <br />
+    <textarea id="text"></textarea>
+    <br />
+    <button id="send">Send</button>
 
     <script>
         (function() {
@@ -27,6 +34,13 @@
                     .on('error', function(err) {
                         console.log('error', err);
                     });
+            });
+            $('#send').click(function() {
+                var val = $('#text').val();
+                console.log(val);
+                client.send(val, function() {
+                    console.log('sent', val);
+                });
             });
         }());
     </script>

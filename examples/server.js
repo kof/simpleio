@@ -24,17 +24,18 @@ express()
     .use(express.session({secret: '123456'}))
     .all('/simpleio', function(req, res, next) {
         var connection,
-            userId = req.param('userId'),
-            client = req.session.client || (req.session.client = simpleio.utils.id());
+            userId = req.session.userId || (req.session.userId = req.param('userId')),
+            clientId = req.session.clientId || (req.session.clientId = simpleio.utils.id());
 
         if (enabledUsers.indexOf(userId) < 0 ) {
             return res.send('Not authorized.', 401);
         }
 
+        req.session.save();
+
         connection = sio.open({
             recipient: userId,
-            client: client,
-            messages: req.param('messages'),
+            client: clientId,
             delivered: req.param('delivered')
         });
 
@@ -45,6 +46,9 @@ express()
             .once('error', next)
             .on('error', console.error);
 
+        if (req.param('messages')) {
+            console.log('Got messages', req.param('messages'));
+        }
     })
     .use(express.static(__dirname + '/..'))
     .listen(3000);

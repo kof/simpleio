@@ -405,9 +405,10 @@ Emitter(Client.prototype);
 module.exports = Client;
 
 Client.prototype.connect = function(data) {
-    this._polling = true;
-    this._baseData = data || {};
-    this._open(true);
+    if (!this._polling) {
+        this._polling = true;
+        this._open(true, data);
+    }
 
     return this;
 };
@@ -421,43 +422,39 @@ Client.prototype.disconnect = function() {
     return this;
 };
 
-Client.prototype.send = function(recipient, message, callback) {
-    message.recipients = recipient;
+Client.prototype.send = function(message, callback) {
     this._multiplexer.add(message);
+    if (callback) this.once('success', callback);
 
     return this;
 };
 
-Client.prototype.broadcast = function(recipients, message, callback) {
-    message.recipients = recipients;
-    this._multiplexer.add(message);
+Client.prototype._open = function(immediately, data) {
+    var self = this;
 
-    return this;
-};
-
-Client.prototype._open = function(force) {
-    var self = this,
-        data = $.extend({}, this._baseData),
-        messages;
+    data || (data = {});
 
     if (!this._polling) {
         return this;
     }
 
-    if (!force && this._connections > 0) {
+    // There is already open connection which will be closed at some point
+    // and then multiplexed messages will be sent if immediately is not true.
+    if (!immediately && this._connections > 0) {
         return this;
     }
-
-    messages = this._multiplexer.get();
-    if (messages.length) {
-        data.messages = messages;
+console.log(111);
+    if (this._multiplexer.get().length) {
+        data.messages = this._multiplexer.get();
         this._multiplexer.reset();
     }
+console.log(222, data);
 
     if (this._delivered.length) {
         data.delivered = this._delivered;
         this._delivered = [];
     }
+console.log(333, data);
 
     this._connections++;
 
@@ -468,9 +465,11 @@ Client.prototype._open = function(force) {
         cache: false,
         dataType: 'json',
         success: function(res) {
+            console.log('success');
             self._onSuccess(res);
         },
         error: function() {
+            console.log('error');
             self._onError(data);
         }
     });
@@ -516,6 +515,8 @@ Client.prototype._onError = function(data) {
 Client.prototype._onSuccess = function(res) {
     var self = this;
 
+    this.emit('success');
+
     this._connections--;
     this._reconnectionAttempts = 1;
 
@@ -529,7 +530,8 @@ Client.prototype._onSuccess = function(res) {
         });
     }
 
-    this._open(this._delivered.length);
+    // Send delivery confirmation immediately.
+    this._open(Boolean(this._delivered.length));
 };
 
 });
@@ -549,11 +551,8 @@ function Multiplexer(opts) {
         duration = opts.duration || 500;
 
     this._messages = [];
-    this._stopped = false;
     this._timeoutId = setInterval(function() {
-        if (self._messages.length) {
-            self.reset();
-        }
+        self.reset(true);
     }, duration);
 }
 
@@ -561,11 +560,6 @@ Emitter(Multiplexer.prototype);
 module.exports = Multiplexer;
 
 Multiplexer.prototype.add = function(messages) {
-    if (this._stopped) {
-        this.emit('error', new Error('Cannot add a message after .close'));
-        return this;
-    }
-
     if ($.isArray(messages)) {
         this._messages.push.apply(this._messages, messages);
     } else if (messages) {
@@ -575,9 +569,13 @@ Multiplexer.prototype.add = function(messages) {
     return this;
 };
 
-Multiplexer.prototype.reset = function() {
-    this.emit('reset');
-    this._messages = [];
+Multiplexer.prototype.reset = function(emit) {
+    if (this._messages.length) {
+        if (emit) this.emit('reset');
+        this._messages = [];
+    }
+
+    return this;
 };
 
 Multiplexer.prototype.get = function() {
@@ -586,7 +584,6 @@ Multiplexer.prototype.get = function() {
 
 Multiplexer.prototype.stop = function() {
     clearInterval(this._timeoutId);
-    this._stopped = true;
     this.removeAllListeners();
 
     return this;
