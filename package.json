@@ -10,7 +10,16 @@
         "type": "git",
         "url": "git@github.com:kof/simpleio.git"
     },
-    "keywords": [],
+    "keywords": [
+        "xhr",
+        "ajax",
+        "long polling",
+        "socket.io",
+        "lightweight",
+        "comet",
+        "real",
+        "time"
+    ],
     "engines": {},
     "dependencies": {
         "mubsub": "https://github.com/kof/mubsub/tarball/dev",

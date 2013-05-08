@@ -11,7 +11,10 @@
     "ajax",
     "long polling",
     "socket.io",
-    "lightweight"
+    "lightweight",
+    "comet",
+    "real",
+    "time"
   ],
   "dependencies": {
     "component/emitter": "1.0.0"
