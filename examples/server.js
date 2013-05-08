@@ -24,14 +24,29 @@ express()
     .use(express.session({secret: '123456'}))
     .all('/simpleio', function(req, res, next) {
         var connection,
-            userId = req.session.userId || (req.session.userId = req.param('userId')),
-            clientId = req.session.clientId || (req.session.clientId = simpleio.utils.id());
+            userId = req.session.userId,
+            clientId = req.session.clientId,
+            save;
+
+        if (!userId) {
+            userId = req.session.userId = req.param('userId');
+            save = true;
+        }
+
+        if (!clientId) {
+            clientId = req.session.clientId = simpleio.utils.id();
+            save = true;
+        }
 
         if (enabledUsers.indexOf(userId) < 0 ) {
             return res.send('Not authorized.', 401);
         }
 
-        req.session.save();
+        // Save the session manually because connect will do this only after
+        // request is closed, but this one will remain for some seconds.
+        if (save) {
+            req.session.save();
+        }
 
         connection = sio.open({
             recipient: userId,
