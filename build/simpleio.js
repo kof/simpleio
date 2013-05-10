@@ -443,18 +443,16 @@ Client.prototype._open = function(immediately, data) {
     if (!immediately && this._connections > 0) {
         return this;
     }
-console.log(111);
+
     if (this._multiplexer.get().length) {
         data.messages = this._multiplexer.get();
         this._multiplexer.reset();
     }
-console.log(222, data);
 
     if (this._delivered.length) {
         data.delivered = this._delivered;
         this._delivered = [];
     }
-console.log(333, data);
 
     this._connections++;
 
