@@ -22,7 +22,7 @@
     ],
     "engines": {},
     "dependencies": {
-        "mubsub": "https://github.com/kof/mubsub/tarball/dev",
+        "mubsub": "1.0.0",
         "emitter-component": "1.0.0"
     },
     "devDependencies": {
