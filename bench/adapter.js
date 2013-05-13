@@ -33,8 +33,8 @@ function sendAndConfirm(adapter, server1, server2, done) {
 
     process.nextTick(function() {
         stats[adapter]++;
-        server1.send(opts.recipient, data, function(err, delivered) {
-            if (err) return console.error(err);
+        server1.send([opts.recipient], data, function(err, delivered) {
+            if (err) return console.error(err.stack);
             if (!delivered) return console.error('Undelivered ' + adapter, opts);
             done();
         });

@@ -1,12 +1,11 @@
-## Features
+## Simple xhr-polling based communication.
 
-- optimized for horizontal scaling
 - support for router/balancer without sticky sessions (f.e. Heroku)
+- optimized for horizontal scaling
 - reliable message delivery (built-in delivery confirmation)
 - multiplexing on the server and client
 
 ## Todo
-- Memory store missing functions
 - tests
 - documentation
 
@@ -16,20 +15,13 @@
 
     or
 
-    git clone ...
+    git clone git@github.com:kof/simpleio.git
     make install
-
-
-## Message format
-
-### Simpleio#send
-
-### Simpleio#open
-
-
+    make build
 
 
 ## Run bench
 
-    npm i bench
-    node-bench bench/adapter
+Ensure running mongodb first.
+
+    node bench/adapter
