@@ -28,29 +28,4 @@ Ensure running mongodb first.
 
 # Api
 
-  - [Client()](#client)
-  - [Client.options](#clientoptions)
-  - [Client.connect()](#clientconnectdataobject)
-  - [Client.disconnect()](#clientdisconnect)
-  - [Client.send()](#clientsendmessagemixedcallbackfunction)
-
-## Client()
-
-  Client constructor.
-
-## Client.options
-
-  Defaults.
-
-## Client.connect([data]:Object)
-
-  Start polling.
-
-## Client.disconnect()
-
-  Stop polling.
-
-## Client.send(message:Mixed, [callback]:Function)
-
-  Send message to the server.
-
+{api}

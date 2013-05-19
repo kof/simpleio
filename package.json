@@ -29,7 +29,8 @@
         "uglify-js": "*",
         "express": "3.2.0",
         "commander": "1.1.1",
-        "bench": "0.3.5"
+        "bench": "0.3.5",
+        "dox": "0.4.3"
     },
     "scripts": {},
     "licenses": [
