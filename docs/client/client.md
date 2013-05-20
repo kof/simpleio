@@ -55,52 +55,5 @@ Send message to the server.
 
 * **Client** this
 
-## _open([immediately], [data])
-
-Open connection.
-
-### Params: 
-
-* **Boolean** *[immediately]* create request immediately.
-
-* **Object** *[data]* additional data to be send.
-
-### Return:
-
-* **Client** this
-
-## _reopen()
-
-Reconnect with incrementally delay.
-
-### Return:
-
-* **Client** this
-
-## _onError(data)
-
-Handle xhr error. Roll back &quot;messages&quot; and &quot;delivered&quot; to send them again by
-next reconnect.
-
-### Params: 
-
-* **Object** *data* data which was not delivered.
-
-### Return:
-
-* **Client** this
-
-## _onSuccess(data)
-
-Handle xhr success. Emit events, send delivery confirmation.
-
-### Params: 
-
-* **Object** *data* data which was not delivered.
-
-### Return:
-
-* **Client** this
-
 <!-- End ./lib/client/Client.js -->
 
