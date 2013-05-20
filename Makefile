@@ -10,4 +10,10 @@ install:
 	component install
 	npm i
 
-.PHONY: build install
+docs:
+	rm -fr ./docs
+	mkdir -p ./docs/client ./docs/server
+	./node_modules/.bin/markdox  ./lib/client/index.js -o ./docs/client/index.md
+	./node_modules/.bin/markdox  ./lib/client/Client.js -o ./docs/client/client.md
+
+.PHONY: build install docs
