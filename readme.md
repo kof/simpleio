@@ -23,11 +23,11 @@
 
 ## Examples
 
-See [examples](/simpleio/blob/master/examples)
+See [examples](./examples)
 
 ## API
 
-See [api](/api.md)
+See [api](./api.md)
 
 ## Usage on the client
 
