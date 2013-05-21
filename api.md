@@ -1,13 +1,12 @@
+
+
 # client/Client.js
-
-
-<!-- Start /Users/kof/work/projects/kof/simpleio/lib/client/Client.js -->
 
 ## Client(options)
 
 Client constructor.
 
-### Params: 
+### Params:
 
 * **Object** *options* 
 
@@ -26,7 +25,7 @@ Default options, will be overwritten by options passed to the constructor.
 
 Start polling.
 
-### Params: 
+### Params:
 
 * **Object** *[data]* data to send with the first request.
 
@@ -46,7 +45,7 @@ Stop polling.
 
 Send message to the server.
 
-### Params: 
+### Params:
 
 * **Mixed** *message* message to send.
 
@@ -56,12 +55,9 @@ Send message to the server.
 
 * **Client** this
 
-<!-- End /Users/kof/work/projects/kof/simpleio/lib/client/Client.js -->
+
 
 # client/index.js
-
-
-<!-- Start /Users/kof/work/projects/kof/simpleio/lib/client/index.js -->
 
 ## Client
 
@@ -75,7 +71,7 @@ Create client.
 
 See: Client
 
-### Params: 
+### Params:
 
 * **Object** *[options]* 
 
@@ -83,18 +79,94 @@ See: Client
 
 * **Client** 
 
-<!-- End /Users/kof/work/projects/kof/simpleio/lib/client/index.js -->
+
+
+# server/Connection.js
+
+## EventEmitter
+
+
+
+# server/index.js
+
+## Server
+
+
+
+# server/Message.js
+
+## Message()
+
+Message constructor.
+
+## recipients
+
+Define recipients.
+
+### Params:
+
+* **Array|String|Number** *recipients* you can pass multiple recipients using
+
+### Return:
+
+* **Message** this
+
+## event(event)
+
+Define an event name. If no event defined, the message can be subscribed
+on the client using &quot;message&quot; event.
+
+### Params:
+
+* **String** *event* 
+
+### Return:
+
+* **Message** this
+
+## data(data)
+
+Define data.
+
+### Params:
+
+* **Mixed** *data* 
+
+## send(callback)
+
+Send the message. Message is sent successful if every recipient has confirmed
+the delivery. Callback is called with &quot;true&quot; as second parameter if succeeded.
+
+### Params:
+
+* **Function** *callback* 
+
+### Return:
+
+* **Message** this
+
+## broadcast(callback)
+
+Broadcast a message. There is no delivery confirmation. Callback is called
+after the message is stored.
+
+### Params:
+
+* **Function** *callback* 
+
+### Return:
+
+* **Message** this
+
+
 
 # server/Server.js
-
-
-<!-- Start /Users/kof/work/projects/kof/simpleio/lib/server/Server.js -->
 
 ## Server([options])
 
 Server constructor.
 
-### Params: 
+### Params:
 
 * **Object** *[options]* 
 
@@ -102,7 +174,7 @@ Server constructor.
 
 Get connected recipients.
 
-### Params: 
+### Params:
 
 * **Function** *callback* 
 
@@ -117,18 +189,15 @@ message, delivered parameter will be true.
 
 ------
 
-<!-- End /Users/kof/work/projects/kof/simpleio/lib/server/Server.js -->
+
 
 # shared/Multiplexer.js
-
-
-<!-- Start /Users/kof/work/projects/kof/simpleio/lib/shared/Multiplexer.js -->
 
 ## Multiplexer(opts)
 
 Multiplexer constructor.
 
-### Params: 
+### Params:
 
 * **Object** *opts* 
 
@@ -136,7 +205,7 @@ Multiplexer constructor.
 
 Add message(s).
 
-### Params: 
+### Params:
 
 * **Mixed** *messages* 
 
@@ -148,7 +217,7 @@ Add message(s).
 
 Reset multiplexer, emit &quot;reset&quot; if there are messages.
 
-### Params: 
+### Params:
 
 * **Boolean** *[emit]* only emit &quot;reset&quot; if true.
 
@@ -172,116 +241,22 @@ Stop multiplexer
 
 * **Multiplexer** this
 
-<!-- End /Users/kof/work/projects/kof/simpleio/lib/shared/Multiplexer.js -->
 
-# server/Connection.js
-
-
-<!-- Start /Users/kof/work/projects/kof/simpleio/lib/server/Connection.js -->
-
-## EventEmitter
-
-<!-- End /Users/kof/work/projects/kof/simpleio/lib/server/Connection.js -->
-
-# server/Message.js
-
-
-<!-- Start /Users/kof/work/projects/kof/simpleio/lib/server/Message.js -->
-
-## Message()
-
-Message constructor.
-
-## recipients
-
-Define recipients.
-
-### Params: 
-
-* **Array|String|Number** *recipients* you can pass multiple recipients using
-
-### Return:
-
-* **Message** this
-
-## event(event)
-
-Define an event name. If no event defined, the message can be subscribed
-on the client using &quot;message&quot; event.
-
-### Params: 
-
-* **String** *event* 
-
-### Return:
-
-* **Message** this
-
-## data(data)
-
-Define data.
-
-### Params: 
-
-* **Mixed** *data* 
-
-## send(callback)
-
-Send the message. Message is sent successful if every recipient has confirmed
-the delivery. Callback is called with &quot;true&quot; as second parameter if succeeded.
-
-### Params: 
-
-* **Function** *callback* 
-
-### Return:
-
-* **Message** this
-
-## broadcast(callback)
-
-Broadcast a message. There is no delivery confirmation. Callback is called
-after the message is stored.
-
-### Params: 
-
-* **Function** *callback* 
-
-### Return:
-
-* **Message** this
-
-<!-- End /Users/kof/work/projects/kof/simpleio/lib/server/Message.js -->
-
-# server/index.js
-
-
-<!-- Start /Users/kof/work/projects/kof/simpleio/lib/server/index.js -->
-
-## Server
-
-<!-- End /Users/kof/work/projects/kof/simpleio/lib/server/index.js -->
 
 # shared/utils.js
 
-
-<!-- Start /Users/kof/work/projects/kof/simpleio/lib/shared/utils.js -->
-
 ## toString
 
-<!-- End /Users/kof/work/projects/kof/simpleio/lib/shared/utils.js -->
+
 
 # server/adapters/Memory.js
-
-
-<!-- Start /Users/kof/work/projects/kof/simpleio/lib/server/adapters/Memory.js -->
 
 ## open(sender, callback)
 
 A client opened a connection. Put the document to determine later
 if the client is connected.
 
-### Params: 
+### Params:
 
 * **String|Number** *sender* 
 
@@ -295,7 +270,7 @@ if the client is connected.
 
 Get users who opened a connection since x date.
 
-### Params: 
+### Params:
 
 * **Date** *since* the date since user has send messages
 
@@ -309,19 +284,16 @@ Get users who opened a connection since x date.
 
 Get all messages for the recipient, which are deliverable.
 
-<!-- End /Users/kof/work/projects/kof/simpleio/lib/server/adapters/Memory.js -->
+
 
 # server/adapters/Mongo.js
-
-
-<!-- Start /Users/kof/work/projects/kof/simpleio/lib/server/adapters/Mongo.js -->
 
 ## open(sender, callback)
 
 A client opened a connection. Put the document to determine later
 if the client is connected.
 
-### Params: 
+### Params:
 
 * **String|Number** *sender* 
 
@@ -335,7 +307,7 @@ if the client is connected.
 
 Get users who opened a connection since x date.
 
-### Params: 
+### Params:
 
 * **Date** *since* the date since user has send messages
 
@@ -349,7 +321,7 @@ Get users who opened a connection since x date.
 
 Get all messages for the recipient, which are deliverable.
 
-### Params: 
+### Params:
 
 * **String** *recipient* 
 
@@ -362,7 +334,7 @@ Get all messages for the recipient, which are deliverable.
 Create a placeholder object for `amount` of delivery confirmations.
 This is a workaround to enable docs in mongo grow.
 
-### Params: 
+### Params:
 
 * **Number** *amount* 
 
@@ -373,6 +345,4 @@ This is a workaround to enable docs in mongo grow.
 ## _ensureIndex()
 
 Ensure indexes.
-
-<!-- End /Users/kof/work/projects/kof/simpleio/lib/server/adapters/Mongo.js -->
 

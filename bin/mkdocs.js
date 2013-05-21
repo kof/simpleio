@@ -5,6 +5,7 @@ var findit = require('findit'),
 
 var lib = path.join(__dirname, '..', 'lib'),
     target = path.join(__dirname, '..', 'api.md'),
+    template = path.join(__dirname, 'api.ejs'),
     docs = '',
     todo = 0;
 
@@ -14,9 +15,8 @@ findit.sync(lib).forEach(function(file, i, files) {
     }
 
     todo++;
-    markdox.process(file, function(err, doc) {
+    markdox.process(file, {template: template, formatter: formatter}, function(err, doc) {
         if (err) return console.error(err);
-        docs += '# ' + file.substr(lib.length + 1) + '\n';
         docs += doc;
         todo--;
 
@@ -25,3 +25,8 @@ findit.sync(lib).forEach(function(file, i, files) {
         }
     });
 });
+
+function formatter(docfile) {
+    docfile.title = docfile.filename.substr(lib.length + 1);
+    return docfile;
+}
