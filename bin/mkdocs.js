@@ -26,7 +26,16 @@ findit.sync(lib).forEach(function(file, i, files) {
     });
 });
 
-function formatter(docfile) {
-    docfile.title = docfile.filename.substr(lib.length + 1);
-    return docfile;
+function formatter(doc) {
+    doc.javadoc.forEach(function(comment) {
+        if (comment.raw.ctx) {
+            comment.constructor = comment.raw.ctx.constructor;
+            comment.receiver = comment.raw.ctx.receiver;
+        }
+
+        comment.isPrivate = comment.raw.isPrivate;
+    });
+
+    doc.title = doc.filename.substr(lib.length + 1);
+    return doc;
 }

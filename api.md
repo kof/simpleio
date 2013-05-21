@@ -10,7 +10,7 @@ Client constructor.
 
 * **Object** *options* 
 
-## options
+## Client.options
 
 Default options, will be overwritten by options passed to the constructor.
 
@@ -21,7 +21,7 @@ Default options, will be overwritten by options passed to the constructor.
   - `maxReconnectionDelay` max ms amount to wait before to reconnect in case of error
   - `multiplexDuration` ms amount for multiplexing messages before emitting
 
-## connect([data])
+## Client#connect([data])
 
 Start polling.
 
@@ -33,7 +33,7 @@ Start polling.
 
 * **Client** this
 
-## disconnect()
+## Client#disconnect()
 
 Stop polling.
 
@@ -41,7 +41,7 @@ Stop polling.
 
 * **Client** this
 
-## send(message, [callback])
+## Client#send(message, [callback])
 
 Send message to the server.
 
@@ -59,13 +59,13 @@ Send message to the server.
 
 # client/index.js
 
-## Client
+## exports.Client
 
 Client constructor.
 
 See: Client
 
-## create([options])
+## function Object() { [native code] }#create([options])
 
 Create client.
 
@@ -83,13 +83,13 @@ See: Client
 
 # server/Connection.js
 
-## EventEmitter
+## undefined.EventEmitter
 
 
 
 # server/index.js
 
-## Server
+## exports.Server
 
 
 
@@ -99,7 +99,7 @@ See: Client
 
 Message constructor.
 
-## recipients
+## undefined.recipients
 
 Define recipients.
 
@@ -111,7 +111,7 @@ Define recipients.
 
 * **Message** this
 
-## event(event)
+## Message#event(event)
 
 Define an event name. If no event defined, the message can be subscribed
 on the client using &quot;message&quot; event.
@@ -124,7 +124,7 @@ on the client using &quot;message&quot; event.
 
 * **Message** this
 
-## data(data)
+## Message#data(data)
 
 Define data.
 
@@ -132,7 +132,7 @@ Define data.
 
 * **Mixed** *data* 
 
-## send(callback)
+## Message#send(callback)
 
 Send the message. Message is sent successful if every recipient has confirmed
 the delivery. Callback is called with &quot;true&quot; as second parameter if succeeded.
@@ -145,7 +145,7 @@ the delivery. Callback is called with &quot;true&quot; as second parameter if su
 
 * **Message** this
 
-## broadcast(callback)
+## Message#broadcast(callback)
 
 Broadcast a message. There is no delivery confirmation. Callback is called
 after the message is stored.
@@ -170,7 +170,7 @@ Server constructor.
 
 * **Object** *[options]* 
 
-## connected(callback)
+## Server#connected(callback)
 
 Get connected recipients.
 
@@ -182,12 +182,18 @@ Get connected recipients.
 
 * **Server** this
 
-## send()
+## Server#send()
 
 Send a message to the recipient. If all clients receive and confirm the
 message, delivered parameter will be true.
 
 ------
+
+
+
+# shared/utils.js
+
+## undefined.toString
 
 
 
@@ -201,7 +207,7 @@ Multiplexer constructor.
 
 * **Object** *opts* 
 
-## add(messages)
+## Multiplexer#add(messages)
 
 Add message(s).
 
@@ -213,7 +219,7 @@ Add message(s).
 
 * **Multiplexer** this
 
-## reset([emit])
+## Multiplexer#reset([emit])
 
 Reset multiplexer, emit &quot;reset&quot; if there are messages.
 
@@ -225,7 +231,7 @@ Reset multiplexer, emit &quot;reset&quot; if there are messages.
 
 * **Multiplexer** this
 
-## get()
+## Multiplexer#get()
 
 Get messages.
 
@@ -233,7 +239,7 @@ Get messages.
 
 * **Array** 
 
-## stop()
+## Multiplexer#stop()
 
 Stop multiplexer
 
@@ -243,15 +249,9 @@ Stop multiplexer
 
 
 
-# shared/utils.js
-
-## toString
-
-
-
 # server/adapters/Memory.js
 
-## open(sender, callback)
+## Memory#open(sender, callback)
 
 A client opened a connection. Put the document to determine later
 if the client is connected.
@@ -266,7 +266,7 @@ if the client is connected.
 
 * **Mongo** this
 
-## connected(since, callback)
+## Memory#connected(since, callback)
 
 Get users who opened a connection since x date.
 
@@ -280,7 +280,7 @@ Get users who opened a connection since x date.
 
 * **Mongo** this
 
-## get()
+## Memory#get()
 
 Get all messages for the recipient, which are deliverable.
 
@@ -288,7 +288,7 @@ Get all messages for the recipient, which are deliverable.
 
 # server/adapters/Mongo.js
 
-## open(sender, callback)
+## Mongo#open(sender, callback)
 
 A client opened a connection. Put the document to determine later
 if the client is connected.
@@ -303,7 +303,7 @@ if the client is connected.
 
 * **Mongo** this
 
-## connected(since, callback)
+## Mongo#connected(since, callback)
 
 Get users who opened a connection since x date.
 
@@ -317,7 +317,7 @@ Get users who opened a connection since x date.
 
 * **Mongo** this
 
-## get(recipient, callback, this)
+## Mongo#get(recipient, callback, this)
 
 Get all messages for the recipient, which are deliverable.
 
@@ -329,7 +329,7 @@ Get all messages for the recipient, which are deliverable.
 
 * **Mongo** *this* 
 
-## _getPlaceholder(amount)
+## Mongo#_getPlaceholder(amount)
 
 Create a placeholder object for `amount` of delivery confirmations.
 This is a workaround to enable docs in mongo grow.
@@ -342,7 +342,7 @@ This is a workaround to enable docs in mongo grow.
 
 * **Object** 
 
-## _ensureIndex()
+## Mongo#_ensureIndex()
 
 Ensure indexes.
 
