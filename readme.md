@@ -13,9 +13,10 @@
 
 ## Install
 
+    // Latest release
     npm i simpleio
 
-    or
+    or master version (on your risk)
 
     git clone git@github.com:kof/simpleio.git
     make install
