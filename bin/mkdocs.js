@@ -29,11 +29,16 @@ findit.sync(lib).forEach(function(file, i, files) {
 function formatter(doc) {
     doc.javadoc.forEach(function(comment) {
         if (comment.raw.ctx) {
-            comment.constructor = comment.raw.ctx.constructor;
+
+            // Will lead to object constructor function if undefined.
+            if (typeof comment.raw.ctx.constructor == 'string') {
+                comment.constructor = comment.raw.ctx.constructor;
+            }
             comment.receiver = comment.raw.ctx.receiver;
         }
 
         comment.isPrivate = comment.raw.isPrivate;
+        console.log(comment);
     });
 
     doc.title = doc.filename.substr(lib.length + 1);

@@ -1,5 +1,29 @@
 
 
+# client/index.js
+
+## exports.Client
+
+Client constructor.
+
+See: Client
+
+## function Object() { [native code] }#create([options])
+
+Create client.
+
+See: Client
+
+### Params:
+
+* **Object** *[options]* 
+
+### Return:
+
+* **Client** 
+
+
+
 # client/Client.js
 
 ## Client(options)
@@ -54,65 +78,6 @@ Send message to the server.
 ### Return:
 
 * **Client** this
-
-
-
-# client/index.js
-
-## exports.Client
-
-Client constructor.
-
-See: Client
-
-## function Object() { [native code] }#create([options])
-
-Create client.
-
-See: Client
-
-### Params:
-
-* **Object** *[options]* 
-
-### Return:
-
-* **Client** 
-
-
-
-# server/Connection.js
-
-## undefined.EventEmitter
-
-
-
-# server/Server.js
-
-## Server([options])
-
-Server constructor.
-
-### Params:
-
-* **Object** *[options]* 
-
-## Server#connected(callback)
-
-Get connected recipients.
-
-### Params:
-
-* **Function** *callback* 
-
-### Return:
-
-* **Server** this
-
-## Server#send()
-
-Send a message to the recipient. If all clients receive and confirm the
-message, delivered parameter will be true.
 
 
 
@@ -183,9 +148,32 @@ after the message is stored.
 
 
 
-# server/index.js
+# server/Server.js
 
-## exports.Server
+## Server([options])
+
+Server constructor.
+
+### Params:
+
+* **Object** *[options]* 
+
+## Server#connected(callback)
+
+Get connected recipients.
+
+### Params:
+
+* **Function** *callback* 
+
+### Return:
+
+* **Server** this
+
+## Server#send()
+
+Send a message to the recipient. If all clients receive and confirm the
+message, delivered parameter will be true.
 
 
 
@@ -238,6 +226,18 @@ Stop multiplexer
 ### Return:
 
 * **Multiplexer** this
+
+
+
+# server/Connection.js
+
+## undefined.EventEmitter
+
+
+
+# server/index.js
+
+## exports.Server
 
 
 
