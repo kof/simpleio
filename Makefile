@@ -11,9 +11,14 @@ install:
 	npm i
 
 docs:
-	rm -fr ./docs
-	mkdir -p ./docs/client ./docs/server
-	./node_modules/.bin/markdox  ./lib/client/index.js -o ./docs/client/index.md
-	./node_modules/.bin/markdox  ./lib/client/Client.js -o ./docs/client/client.md
+	./node_modules/.bin/markdox\
+		./lib/client/Client.js\
+		./lib/server/Server.js\
+		./lib/server/Message.js\
+		./lib/server/Connection.js\
+		./lib/server/adapters/Memory.js\
+		./lib/server/adapters/Mongo.js\
+		./lib/shared/Multiplexer.js\
+		-o ./api.md
 
 .PHONY: build install docs
