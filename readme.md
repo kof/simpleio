@@ -31,7 +31,15 @@ See [api](./api.md)
 
 ## Usage on the client
 
-1. Include build/simpleio.min.js on your site
+1. Include build/simpleio.min.js on your site.
+
+        // If you you wrap the module into amd or if you are using some of require/define
+        // implementations.
+        var simpleio = require('simpleio');
+
+        // Plain javascript
+        var simpleio = window.simpleio;
+
 1. Create a client, pass ajax implementation from jquery or similar:
 
         var client = simpleio.create({ajax: jQuery.ajax});
