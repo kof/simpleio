@@ -32,7 +32,7 @@ function formatter(doc) {
 
             // Will lead to object constructor function if undefined.
             if (typeof comment.raw.ctx.constructor == 'string') {
-                comment.constructor = comment.raw.ctx.constructor;
+                comment.constr = comment.raw.ctx.constructor;
             }
             comment.receiver = comment.raw.ctx.receiver;
         }

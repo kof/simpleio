@@ -3,14 +3,14 @@
   # <?= doc.title ?>
 
   <? doc.javadoc.forEach(function(comment) { ?>
-    <? if (!comment.ignore && !comment.isPrivate) { ?>
+    <? if (comment.description && !comment.ignore && !comment.isPrivate) { ?>
       <? if (comment.name) { ?>
         <? if (comment.isMethod) { ?>
-          ## <?= comment.constructor ?>#<?= comment.name ?>(<?= comment.paramStr ?>)
+          ## <?= comment.constr || comment.receiver ?>#<?= comment.name ?>(<?= comment.paramStr ?>)
         <? } else if (comment.isFunction) { ?>
-          ## <?= comment.name ?>(<?= comment.paramStr ?>)
+          ## <?= comment.receiver ? comment.receiver + '.' : '' ?><?= comment.name ?>(<?= comment.paramStr ?>)
         <? } else { ?>
-          ## <?= comment.receiver ?>.<?= comment.name ?>
+          ## <?= comment.receiver ? comment.receiver + '.' : '' ?><?= comment.name ?>
         <? } ?>
       <? } ?>
 

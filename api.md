@@ -1,29 +1,5 @@
 
 
-# client/index.js
-
-## exports.Client
-
-Client constructor.
-
-See: Client
-
-## function Object() { [native code] }#create([options])
-
-Create client.
-
-See: Client
-
-### Params:
-
-* **Object** *[options]* 
-
-### Return:
-
-* **Client** 
-
-
-
 # client/Client.js
 
 ## Client(options)
@@ -81,13 +57,45 @@ Send message to the server.
 
 
 
+# client/index.js
+
+## exports.Client
+
+Client constructor.
+
+See: Client
+
+## exports#create([options])
+
+Create client.
+
+See: Client
+
+### Params:
+
+* **Object** *[options]* 
+
+### Return:
+
+* **Client** 
+
+
+
+# server/Connection.js
+
+
+
+# server/index.js
+
+
+
 # server/Message.js
 
 ## Message()
 
 Message constructor.
 
-## undefined.recipients
+## recipients
 
 Define recipients.
 
@@ -229,21 +237,7 @@ Stop multiplexer
 
 
 
-# server/Connection.js
-
-## undefined.EventEmitter
-
-
-
-# server/index.js
-
-## exports.Server
-
-
-
 # shared/utils.js
-
-## undefined.toString
 
 
 
