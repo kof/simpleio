@@ -2,13 +2,15 @@
 
 <!-- Start ./lib/client/Client.js -->
 
+# Client will hold open connection to the server, send and receive messages.
+
 ## Client(options)
 
 Client constructor.
 
-### Params: 
+### Params:
 
-* **Object** *options* 
+* **Object** *options*
 
 ## options
 
@@ -25,7 +27,7 @@ Default options, will be overwritten by options passed to the constructor.
 
 Start polling.
 
-### Params: 
+### Params:
 
 * **Object** *[data]* data to send with the first request.
 
@@ -45,7 +47,7 @@ Stop polling.
 
 Send message to the server.
 
-### Params: 
+### Params:
 
 * **Mixed** *message* message to send.
 
@@ -65,17 +67,17 @@ Send message to the server.
 
 Server constructor.
 
-### Params: 
+### Params:
 
-* **Object** *[options]* 
+* **Object** *[options]*
 
 ## connected(callback)
 
 Get connected recipients.
 
-### Params: 
+### Params:
 
-* **Function** *callback* 
+* **Function** *callback*
 
 ### Return:
 
@@ -98,7 +100,7 @@ Message constructor.
 
 Define recipients.
 
-### Params: 
+### Params:
 
 * **Array|String|Number** *recipients* you can pass multiple recipients using
 
@@ -111,9 +113,9 @@ Define recipients.
 Define an event name. If no event defined, the message can be subscribed
 on the client using &quot;message&quot; event.
 
-### Params: 
+### Params:
 
-* **String** *event* 
+* **String** *event*
 
 ### Return:
 
@@ -123,18 +125,18 @@ on the client using &quot;message&quot; event.
 
 Define data.
 
-### Params: 
+### Params:
 
-* **Mixed** *data* 
+* **Mixed** *data*
 
 ## send(callback)
 
 Send the message. Message is sent successful if every recipient has confirmed
 the delivery. Callback is called with &quot;true&quot; as second parameter if succeeded.
 
-### Params: 
+### Params:
 
-* **Function** *callback* 
+* **Function** *callback*
 
 ### Return:
 
@@ -145,9 +147,9 @@ the delivery. Callback is called with &quot;true&quot; as second parameter if su
 Broadcast a message. There is no delivery confirmation. Callback is called
 after the message is stored.
 
-### Params: 
+### Params:
 
-* **Function** *callback* 
+* **Function** *callback*
 
 ### Return:
 
@@ -168,11 +170,11 @@ after the message is stored.
 A client opened a connection. Put the document to determine later
 if the client is connected.
 
-### Params: 
+### Params:
 
-* **String|Number** *sender* 
+* **String|Number** *sender*
 
-* **Function** *callback* 
+* **Function** *callback*
 
 ### Return:
 
@@ -182,11 +184,11 @@ if the client is connected.
 
 Get users who opened a connection since x date.
 
-### Params: 
+### Params:
 
 * **Date** *since* the date since user has send messages
 
-* **Function** *callback* 
+* **Function** *callback*
 
 ### Return:
 
@@ -196,26 +198,26 @@ Get users who opened a connection since x date.
 
 Get all messages for the recipient, which are deliverable.
 
-### Params: 
+### Params:
 
-* **String** *recipient* 
+* **String** *recipient*
 
-* **Function** *callback* 
+* **Function** *callback*
 
-* **Mongo** *this* 
+* **Mongo** *this*
 
 ## _getPlaceholder(amount)
 
 Create a placeholder object for `amount` of delivery confirmations.
 This is a workaround to enable docs in mongo grow.
 
-### Params: 
+### Params:
 
-* **Number** *amount* 
+* **Number** *amount*
 
 ### Return:
 
-* **Object** 
+* **Object**
 
 ## _ensureIndex()
 
@@ -223,23 +225,60 @@ Ensure indexes.
 
 <!-- End ./lib/server/adapters/Mongo.js -->
 
+<!-- Start ./lib/server/adapters/Memory.js -->
+
+## open(sender, callback)
+
+A client opened a connection. Put the document to determine later
+if the client is connected.
+
+### Params:
+
+* **String|Number** *sender*
+
+* **Function** *callback*
+
+### Return:
+
+* **Mongo** this
+
+## connected(since, callback)
+
+Get users who opened a connection since x date.
+
+### Params:
+
+* **Date** *since* the date since user has send messages
+
+* **Function** *callback*
+
+### Return:
+
+* **Mongo** this
+
+## get()
+
+Get all messages for the recipient, which are deliverable.
+
+<!-- End ./lib/server/adapters/Memory.js -->
+
 <!-- Start ./lib/shared/Multiplexer.js -->
 
 ## Multiplexer(opts)
 
 Multiplexer constructor.
 
-### Params: 
+### Params:
 
-* **Object** *opts* 
+* **Object** *opts*
 
 ## add(messages)
 
 Add message(s).
 
-### Params: 
+### Params:
 
-* **Mixed** *messages* 
+* **Mixed** *messages*
 
 ### Return:
 
@@ -249,7 +288,7 @@ Add message(s).
 
 Reset multiplexer, emit &quot;reset&quot; if there are messages.
 
-### Params: 
+### Params:
 
 * **Boolean** *[emit]* only emit &quot;reset&quot; if true.
 
@@ -263,7 +302,7 @@ Get messages.
 
 ### Return:
 
-* **Array** 
+* **Array**
 
 ## stop()
 
@@ -274,41 +313,4 @@ Stop multiplexer
 * **Multiplexer** this
 
 <!-- End ./lib/shared/Multiplexer.js -->
-
-<!-- Start ./lib/server/adapters/Memory.js -->
-
-## open(sender, callback)
-
-A client opened a connection. Put the document to determine later
-if the client is connected.
-
-### Params: 
-
-* **String|Number** *sender* 
-
-* **Function** *callback* 
-
-### Return:
-
-* **Mongo** this
-
-## connected(since, callback)
-
-Get users who opened a connection since x date.
-
-### Params: 
-
-* **Date** *since* the date since user has send messages
-
-* **Function** *callback* 
-
-### Return:
-
-* **Mongo** this
-
-## get()
-
-Get all messages for the recipient, which are deliverable.
-
-<!-- End ./lib/server/adapters/Memory.js -->
 
