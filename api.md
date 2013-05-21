@@ -87,9 +87,32 @@ See: Client
 
 
 
-# server/index.js
+# server/Server.js
 
-## exports.Server
+## Server([options])
+
+Server constructor.
+
+### Params:
+
+* **Object** *[options]* 
+
+## Server#connected(callback)
+
+Get connected recipients.
+
+### Params:
+
+* **Function** *callback* 
+
+### Return:
+
+* **Server** this
+
+## Server#send()
+
+Send a message to the recipient. If all clients receive and confirm the
+message, delivered parameter will be true.
 
 
 
@@ -160,40 +183,9 @@ after the message is stored.
 
 
 
-# server/Server.js
+# server/index.js
 
-## Server([options])
-
-Server constructor.
-
-### Params:
-
-* **Object** *[options]* 
-
-## Server#connected(callback)
-
-Get connected recipients.
-
-### Params:
-
-* **Function** *callback* 
-
-### Return:
-
-* **Server** this
-
-## Server#send()
-
-Send a message to the recipient. If all clients receive and confirm the
-message, delivered parameter will be true.
-
-------
-
-
-
-# shared/utils.js
-
-## undefined.toString
+## exports.Server
 
 
 
@@ -246,6 +238,12 @@ Stop multiplexer
 ### Return:
 
 * **Multiplexer** this
+
+
+
+# shared/utils.js
+
+## undefined.toString
 
 
 
