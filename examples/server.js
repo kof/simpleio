@@ -4,17 +4,14 @@ var express = require('express'),
     fs = require('fs'),
     program = require('commander');
 
-var sio,
-    Adapter,
+var simpleioServer,
     enabledUsers = ['aaa', 'bbb', 'ccc', 'ddd'];
 
 program
     .option('-a, --adapter <adapter>', 'adapter to use Memory|Mongo', String, 'Memory')
     .parse(process.argv);
 
-Adapter = require('../lib/server/adapters/' + program.adapter);
-
-sio = new simpleio.create({adapter: new Adapter})
+simpleioServer = simpleio.create({adapter: simpleio.adapters[program.adapter]})
     .on('error', console.error);
 
 express()
@@ -34,7 +31,7 @@ express()
         }
 
         if (!clientId) {
-            clientId = req.session.clientId = simpleio.utils.id();
+            clientId = req.session.clientId = simpleio.utils.uid();
             save = true;
         }
 
@@ -48,8 +45,8 @@ express()
             req.session.save();
         }
 
-        connection = sio.open({
-            recipient: userId,
+        connection = simpleioServer.open({
+            user: userId,
             client: clientId,
             delivered: req.param('delivered')
         });
@@ -85,7 +82,7 @@ console.log('Running on localhost:3000', ', using adapter', program.adapter);
 
             console.time('delivery time');
 
-            sio.message()
+            simpleioServer.message()
                 .recipient(recipient)
                 .data(data)
                 .send(function(err, delivered) {

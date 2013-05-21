@@ -81,19 +81,65 @@ See: Client
 
 
 
+# server/Adapter.js
+
+
+
 # server/Connection.js
 
 
 
 # server/index.js
 
+## exports.Server
+
+Expose Server constructor.
+
+## exports.Message
+
+Expose Message constructor.
+
+## exports.Connection
+
+Expose Connection constructor.
+
+## exports.Multiplexer
+
+Expose Multiplexer constructor.
+
+## exports.utils
+
+Expose utils.
+
+## exports.adapters
+
+Expose adapters.
+
+## exports#create([opts])
+
+Create a Server instance.
+
+See: exports.Server
+
+### Params:
+
+* **Object** *[opts]* 
+
+### Return:
+
+* **Server** 
+
 
 
 # server/Message.js
 
-## Message()
+## Message(server)
 
-Message constructor.
+Message constructor - a higher level way to build and send a message.
+
+### Params:
+
+* **Server** *server* 
 
 ## recipients
 
@@ -122,7 +168,7 @@ on the client using &quot;message&quot; event.
 
 ## Message#data(data)
 
-Define data.
+Define data to be send within a message
 
 ### Params:
 
@@ -166,9 +212,64 @@ Server constructor.
 
 * **Object** *[options]* 
 
+## Server.options
+
+Default options, will be overwritten by options passed to the Server.
+
+ - `deliveryTimeout` Message is not delivered if confirmation was not received during this time
+ - `keepAlive` amount of ms to keep connection open. (Heroku requires this value to be less than 30s.)
+ - `disconnectedAfter` amount of ms after which client counts as disconnected
+ - `multiplexDuration` amount of ms messages will be collected before send
+
+## Server#open(params)
+
+Client has opened a connection.
+
+Params object:
+
+ - `user` user id
+ - `client` client id of the user (one user can have multiple clients)
+ - `delivered` optional delivered messages ids array
+
+### Params:
+
+* **Object** *params* 
+
+### Return:
+
+* **Connection** 
+
+## Server#close(client)
+
+Close connection to the client.
+
+### Params:
+
+* **String|Number** *client* id
+
+### Return:
+
+* **Server** this
+
+## Server#destroy()
+
+Destroy the server.
+
+### Return:
+
+* **Server** this
+
+## Server#message()
+
+Create a message.
+
+### Return:
+
+* **Message** 
+
 ## Server#connected(callback)
 
-Get connected recipients.
+Get connected users.
 
 ### Params:
 
@@ -178,10 +279,24 @@ Get connected recipients.
 
 * **Server** this
 
-## Server#send()
+## Server#send(recipients, data, [callback])
 
-Send a message to the recipient. If all clients receive and confirm the
-message, delivered parameter will be true.
+Send a message to recipient(s). If all recipients receive and confirm the
+message, second callback parameter will be true.
+
+Recommended to use a Server#message which is a higher level to send a message.
+
+### Params:
+
+* **String|Number|Array** *recipients* one or multiple recipients
+
+* **Object** *data* to send
+
+* **Function** *[callback]* 
+
+### Return:
+
+* **Server** this
 
 
 
@@ -239,6 +354,70 @@ Stop multiplexer
 
 # shared/utils.js
 
+## exports.isArray
+
+Crossengine detecttion if passed object is an array.
+
+### Params:
+
+* **Object** *obj* 
+
+### Return:
+
+* **Boolean** 
+
+## exports.now
+
+Crossbrowser Date.now.
+
+### Return:
+
+* **Number** 
+
+## exports#each(obj, iterator, [context])
+
+The cornerstone, an `each` implementation, aka `forEach`.
+Handles objects with the built-in `forEach`, arrays, and raw objects.
+Delegates to **ECMAScript 5**'s native `forEach` if available.
+
+### Params:
+
+* **Object** *obj* 
+
+* **Function** *iterator* 
+
+* **Object** *[context]* 
+
+## exports#has(obj, key)
+
+Shortcut for hasOwnProperty.
+
+### Params:
+
+* **Object** *obj* 
+
+* **String** *key* 
+
+### Return:
+
+* **Boolean** 
+
+## exports#extend(obj)
+
+Extend first passed object by the following.
+
+### Params:
+
+* **Object** *obj* 
+
+## exports#uid()
+
+Generate a unique id.
+
+### Return:
+
+* **Number** 
+
 
 
 # server/adapters/Memory.js
@@ -271,10 +450,6 @@ Get users who opened a connection since x date.
 ### Return:
 
 * **Mongo** this
-
-## Memory#get()
-
-Get all messages for the recipient, which are deliverable.
 
 
 
@@ -333,8 +508,4 @@ This is a workaround to enable docs in mongo grow.
 ### Return:
 
 * **Object** 
-
-## Mongo#_ensureIndex()
-
-Ensure indexes.
 

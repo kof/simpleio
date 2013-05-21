@@ -3,7 +3,7 @@
   # <?= doc.title ?>
 
   <? doc.javadoc.forEach(function(comment) { ?>
-    <? if (comment.description && !comment.ignore && !comment.isPrivate) { ?>
+    <? if (comment.description && !comment.ignore && comment.isPrivate === false) { ?>
       <? if (comment.name) { ?>
         <? if (comment.isMethod) { ?>
           ## <?= comment.constr || comment.receiver ?>#<?= comment.name ?>(<?= comment.paramStr ?>)

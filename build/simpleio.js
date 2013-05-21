@@ -382,13 +382,6 @@ exports.create = function(options) {
 
 });
 require.register("simpleio/lib/client/Client.js", function(exports, require, module){
-/**
- * # Client will held open connection to the server, send and receive messages.
- */
-
-/*!
- * Dependencies.
- */
 var Emitter = require('emitter'),
     sio = require('./index'),
     Multiplexer = require('../shared/Multiplexer'),
@@ -485,7 +478,7 @@ Client.prototype.send = function(message, callback) {
     return this;
 };
 
-/*!
+/**
  * Open connection.
  *
  * @param {Boolean} [immediately] create request immediately.
@@ -537,7 +530,7 @@ Client.prototype._open = function(immediately, data) {
     return this;
 };
 
-/*!
+/**
  * Reconnect with incrementally delay.
  *
  * @return {Client} this
@@ -558,7 +551,7 @@ Client.prototype._reopen = function() {
     return this;
 };
 
-/*!
+/**
  * Handle xhr error. Roll back "messages" and "delivered" to send them again by
  * next reconnect.
  *
@@ -579,7 +572,7 @@ Client.prototype._onError = function(data) {
     this._reopen();
 };
 
-/*!
+/**
  * Handle xhr success. Emit events, send delivery confirmation.
  *
  * @param {Object} data data which was not delivered.
@@ -609,14 +602,6 @@ Client.prototype._onSuccess = function(data) {
 
 });
 require.register("simpleio/lib/shared/Multiplexer.js", function(exports, require, module){
-/**
- * # Multiplexer is used to reduce the amount of reconnects by collecting messages
- * # for some period of time and sending thiem at once.
- */
-
-/*!
- * Dependencies.
- */
  var Emitter,
     $ = require('./utils');
 
@@ -703,25 +688,42 @@ Multiplexer.prototype.stop = function() {
 
 });
 require.register("simpleio/lib/shared/utils.js", function(exports, require, module){
-/*!
- * Dependencies.
- */
 var toString = Object.prototype.toString,
     nativeForEach = Array.prototype.forEach,
     hasOwnProperty = Object.prototype.hasOwnProperty,
     slice = Array.prototype.slice;
 
+/**
+ * Crossengine detecttion if passed object is an array.
+ *
+ * @param {Object} obj
+ * @return {Boolean}
+ * @api public
+ */
 exports.isArray = Array.isArray || function(obj) {
     return toString.call(obj) == '[object Array]';
 };
 
+/**
+ * Crossbrowser Date.now.
+ *
+ * @return {Number}
+ * @api public
+ */
 exports.now = Date.now || function() {
     return new Date().getTime();
 };
 
-// The cornerstone, an `each` implementation, aka `forEach`.
-// Handles objects with the built-in `forEach`, arrays, and raw objects.
-// Delegates to **ECMAScript 5**'s native `forEach` if available.
+/**
+ * The cornerstone, an `each` implementation, aka `forEach`.
+ * Handles objects with the built-in `forEach`, arrays, and raw objects.
+ * Delegates to **ECMAScript 5**'s native `forEach` if available.
+ *
+ * @param {Object} obj
+ * @param {Function} iterator
+ * @param {Object} [context]
+ * @api public
+ */
 exports.each = function(obj, iterator, context) {
     var i, key;
 
@@ -741,10 +743,25 @@ exports.each = function(obj, iterator, context) {
     }
 };
 
+/**
+ * Shortcut for hasOwnProperty.
+ *
+ * @param {Object} obj
+ * @param {String} key
+ * @return {Boolean}
+ * @api public
+ */
 exports.has = function(obj, key) {
     return hasOwnProperty.call(obj, key);
 };
 
+/**
+ * Extend first passed object by the following.
+ *
+ * @param {Object} obj
+ * @returm {Object}
+ * @api public
+ */
 exports.extend = function(obj) {
     exports.each(slice.call(arguments, 1), function(source) {
         var prop;
@@ -759,7 +776,13 @@ exports.extend = function(obj) {
     return obj;
 };
 
-exports.id = function() {
+/**
+ * Generate a unique id.
+ *
+ * @return {Number}
+ * @api public
+ */
+exports.uid = function() {
     return Math.round(Math.random() * exports.now());
 };
 

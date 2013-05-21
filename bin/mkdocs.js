@@ -38,9 +38,9 @@ function formatter(doc) {
         }
 
         comment.isPrivate = comment.raw.isPrivate;
-        console.log(comment);
     });
 
     doc.title = doc.filename.substr(lib.length + 1);
+
     return doc;
 }
