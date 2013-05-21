@@ -360,30 +360,52 @@ Emitter.prototype.hasListeners = function(event){
 
 });
 require.register("simpleio/lib/client/index.js", function(exports, require, module){
+/**
+ * Client constructor.
+ *
+ * @see Client
+ * @api public
+ */
 exports.Client = require('./Client');
 
-exports.request;
-
-exports.create = function(opts) {
-    return new exports.Client(opts);
+/**
+ * Create client.
+ *
+ * @param {Object} [options]
+ * @return {Client}
+ * @see Client
+ * @api public
+ */
+exports.create = function(options) {
+    return new exports.Client(options);
 };
 
 });
 require.register("simpleio/lib/client/Client.js", function(exports, require, module){
+/**
+ * # Client will held open connection to the server, send and receive messages.
+ */
+
+/*!
+ * Dependencies.
+ */
 var Emitter = require('emitter'),
     sio = require('./index'),
     Multiplexer = require('../shared/Multiplexer'),
     $ = require('../shared/utils');
 
-function Client(opts) {
+/**
+ * Client constructor.
+ *
+ * @param {Object} options
+ * @api public
+ */
+function Client(options) {
     var self = this;
 
-    this.options = opts = $.extend({}, Client.options, opts);
-    this.ajax = opts.ajax;
-    this._multiplexer = new Multiplexer({duration: opts.multiplexDuration})
-        .on('error', function(err) {
-            self.emit('error', err);
-        })
+    this.options = $.extend({}, Client.options, options);
+    this.ajax = this.options.ajax;
+    this._multiplexer = new Multiplexer({duration: this.options.multiplexDuration})
         .on('reset', function() {
             self._open(true);
         });
@@ -393,17 +415,37 @@ function Client(opts) {
     this._reconnectionAttempts = 1;
 }
 
+/**
+ * Default options, will be overwritten by options passed to the constructor.
+ *
+ *   - `ajax` required jQuery ajax api
+ *   - `url` connection url, default is '/simpleio'
+ *   - `reconnectionDelay` ms amount to wait before to reconnect in case of error,
+ *      will be increased on every further error until maxReconnectionDelay
+ *   - `maxReconnectionDelay` max ms amount to wait before to reconnect in case of error
+ *   - `multiplexDuration` ms amount for multiplexing messages before emitting
+ *
+ * @type {Object}
+ * @api public
+ */
 Client.options = {
     url: '/simpleio',
     ajax: null,
     reconnectionDelay: 1000,
     maxReconnectionDelay: 10000,
-    multiplexDuration: null
+    multiplexDuration: 500
 };
 
 Emitter(Client.prototype);
 module.exports = Client;
 
+/**
+ * Start polling.
+ *
+ * @param {Object} [data] data to send with the first request.
+ * @return {Client} this
+ * @api public
+ */
 Client.prototype.connect = function(data) {
     if (!this._polling) {
         this._polling = true;
@@ -413,6 +455,12 @@ Client.prototype.connect = function(data) {
     return this;
 };
 
+/**
+ * Stop polling.
+ *
+ * @return {Client} this
+ * @api public
+ */
 Client.prototype.disconnect = function() {
     this._polling = false;
     if (this._xhr) {
@@ -422,6 +470,14 @@ Client.prototype.disconnect = function() {
     return this;
 };
 
+/**
+ * Send message to the server.
+ *
+ * @param {Mixed} message message to send.
+ * @param {Function} [callback] is called when message was send to the server without error.
+ * @return {Client} this
+ * @api public
+ */
 Client.prototype.send = function(message, callback) {
     this._multiplexer.add(message);
     if (callback) this.once('success', callback);
@@ -429,6 +485,14 @@ Client.prototype.send = function(message, callback) {
     return this;
 };
 
+/*!
+ * Open connection.
+ *
+ * @param {Boolean} [immediately] create request immediately.
+ * @param {Object} [data] additional data to be send.
+ * @return {Client} this
+ * @api private
+ */
 Client.prototype._open = function(immediately, data) {
     var self = this;
 
@@ -462,8 +526,8 @@ Client.prototype._open = function(immediately, data) {
         data: data,
         cache: false,
         dataType: 'json',
-        success: function(res) {
-            self._onSuccess(res);
+        success: function(data) {
+            self._onSuccess(data);
         },
         error: function() {
             self._onError(data);
@@ -473,10 +537,11 @@ Client.prototype._open = function(immediately, data) {
     return this;
 };
 
-/**
+/*!
  * Reconnect with incrementally delay.
  *
  * @return {Client} this
+ * @api private
  */
 Client.prototype._reopen = function() {
     var self = this,
@@ -493,11 +558,17 @@ Client.prototype._reopen = function() {
     return this;
 };
 
+/*!
+ * Handle xhr error. Roll back "messages" and "delivered" to send them again by
+ * next reconnect.
+ *
+ * @param {Object} data data which was not delivered.
+ * @return {Client} this
+ * @api private
+ */
 Client.prototype._onError = function(data) {
     this._connections--;
 
-    // Roll back "messages" and "delivered" to pick up them again by
-    // next try to connect.
     if (data.delivered) {
         this._delivered.push.apply(this._delivered, data.delivered);
     }
@@ -508,16 +579,22 @@ Client.prototype._onError = function(data) {
     this._reopen();
 };
 
-Client.prototype._onSuccess = function(res) {
+/*!
+ * Handle xhr success. Emit events, send delivery confirmation.
+ *
+ * @param {Object} data data which was not delivered.
+ * @return {Client} this
+ * @api private
+ */
+Client.prototype._onSuccess = function(data) {
     var self = this;
 
     this.emit('success');
-
     this._connections--;
     this._reconnectionAttempts = 1;
 
-    if (res.messages.length) {
-        $.each(res.messages, function(message) {
+    if (data.messages.length) {
+        $.each(data.messages, function(message) {
             if (message.data.confirmation) self._delivered.push(message.id);
             if (message.data.event) {
                 self.emit(message.data.event, message.data.data);
@@ -532,7 +609,15 @@ Client.prototype._onSuccess = function(res) {
 
 });
 require.register("simpleio/lib/shared/Multiplexer.js", function(exports, require, module){
-var Emitter,
+/**
+ * # Multiplexer is used to reduce the amount of reconnects by collecting messages
+ * # for some period of time and sending thiem at once.
+ */
+
+/*!
+ * Dependencies.
+ */
+ var Emitter,
     $ = require('./utils');
 
 try {
@@ -541,20 +626,32 @@ try {
     Emitter = require('emitter');
 }
 
+/**
+ * Multiplexer constructor.
+ *
+ * @param {Object} opts
+ *   - `duration` amount of time in ms to wait until emiting "reset" event if
+ *     messages are collected.
+ * @api public
+ */
 function Multiplexer(opts) {
-    var self = this,
-        // Amount of ms for multiplexing messages before emitting.
-        duration = opts.duration || 500;
-
+    var self = this;
     this._messages = [];
     this._timeoutId = setInterval(function() {
         self.reset(true);
-    }, duration);
+    }, opts.duration);
 }
 
 Emitter(Multiplexer.prototype);
 module.exports = Multiplexer;
 
+/**
+ * Add message(s).
+ *
+ * @param {Mixed} messages
+ * @return {Multiplexer} this
+ * @api public
+ */
 Multiplexer.prototype.add = function(messages) {
     if ($.isArray(messages)) {
         this._messages.push.apply(this._messages, messages);
@@ -565,6 +662,13 @@ Multiplexer.prototype.add = function(messages) {
     return this;
 };
 
+/**
+ * Reset multiplexer, emit "reset" if there are messages.
+ *
+ * @param {Boolean} [emit] only emit "reset" if true.
+ * @return {Multiplexer} this
+ * @api public
+ */
 Multiplexer.prototype.reset = function(emit) {
     if (this._messages.length) {
         if (emit) this.emit('reset');
@@ -574,10 +678,22 @@ Multiplexer.prototype.reset = function(emit) {
     return this;
 };
 
+/**
+ * Get messages.
+ *
+ * @return {Array}
+ * @api public
+ */
 Multiplexer.prototype.get = function() {
     return this._messages;
 };
 
+/**
+ * Stop multiplexer
+ *
+ * @return {Multiplexer} this
+ * @api public
+ */
 Multiplexer.prototype.stop = function() {
     clearInterval(this._timeoutId);
     this.removeAllListeners();
@@ -587,6 +703,9 @@ Multiplexer.prototype.stop = function() {
 
 });
 require.register("simpleio/lib/shared/utils.js", function(exports, require, module){
+/*!
+ * Dependencies.
+ */
 var toString = Object.prototype.toString,
     nativeForEach = Array.prototype.forEach,
     hasOwnProperty = Object.prototype.hasOwnProperty,

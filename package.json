@@ -30,7 +30,8 @@
         "express": "3.2.0",
         "commander": "1.1.1",
         "bench": "0.3.5",
-        "markdox": "0.1.2"
+        "markdox": "0.1.2",
+        "findit": "0.1.2"
     },
     "scripts": {},
     "licenses": [
