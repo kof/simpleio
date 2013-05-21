@@ -4,7 +4,7 @@
 - optimized for horizontal scaling
 - reliable message delivery (built-in delivery confirmation)
 - multiplexing on the server and client
-- lightweight (appr. 6.5 kb on the client)
+- lightweight (appr. 2.5 kb minified and gzipped on the client)
 
 ## Todo
 
@@ -23,7 +23,11 @@
 
 ## Examples
 
-    See ./examples
+See [examples](/simpleio/blob/master/examples)
+
+## API
+
+See [api](/api.md)
 
 ## Usage on the client
 
