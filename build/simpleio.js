@@ -519,6 +519,11 @@ Client.prototype._open = function(immediately, data) {
         data: data,
         cache: false,
         dataType: 'json',
+        async: true,
+
+        // Server will close request if needed, ensure here
+        // not using settings from global setup
+        timeout: 1000 * 60 * 2,
         success: function(data) {
             self._onSuccess(data);
         },
