@@ -102,7 +102,7 @@ See [api](./api.md)
 
         var connection = simpleioServer.open({
             user: userId,
-            client: clientId,
+            client: req.param('client'),
             delivered: req.param('delivered')
         });
 

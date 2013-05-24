@@ -11,7 +11,7 @@ program
     .option('-a, --adapter <adapter>', 'adapter to use Memory|Mongo', String, 'Memory')
     .parse(process.argv);
 
-simpleioServer = simpleio.create({adapter: simpleio.adapters[program.adapter]})
+simpleioServer = simpleio.create({adapter: new simpleio.adapters[program.adapter]})
     .on('error', console.error);
 
 express()
@@ -22,7 +22,6 @@ express()
     .all('/simpleio', function(req, res, next) {
         var connection,
             userId = req.session.userId,
-            clientId = req.session.clientId,
             save;
 
         if (!userId) {
@@ -30,10 +29,6 @@ express()
             save = true;
         }
 
-        if (!clientId) {
-            clientId = req.session.clientId = simpleio.utils.uid();
-            save = true;
-        }
 
         if (enabledUsers.indexOf(userId) < 0 ) {
             return res.send('Not authorized.', 401);
@@ -47,7 +42,7 @@ express()
 
         connection = simpleioServer.open({
             user: userId,
-            client: clientId,
+            client: req.param('client'),
             delivered: req.param('delivered')
         });
 

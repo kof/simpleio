@@ -81,124 +81,59 @@ See: Client
 
 
 
+# shared/Multiplexer.js
+
+## Multiplexer(opts)
+
+Multiplexer constructor.
+
+### Params:
+
+* **Object** *opts* 
+
+## Multiplexer#add(messages)
+
+Add message(s).
+
+### Params:
+
+* **Mixed** *messages* 
+
+### Return:
+
+* **Multiplexer** this
+
+## Multiplexer#reset([emit])
+
+Reset multiplexer, emit &quot;reset&quot; if there are messages.
+
+### Params:
+
+* **Boolean** *[emit]* only emit &quot;reset&quot; if true.
+
+### Return:
+
+* **Multiplexer** this
+
+## Multiplexer#get()
+
+Get messages.
+
+### Return:
+
+* **Array** 
+
+## Multiplexer#stop()
+
+Stop multiplexer
+
+### Return:
+
+* **Multiplexer** this
+
+
+
 # server/Adapter.js
-
-
-
-# server/Connection.js
-
-
-
-# server/index.js
-
-## exports.Server
-
-Expose Server constructor.
-
-## exports.Message
-
-Expose Message constructor.
-
-## exports.Connection
-
-Expose Connection constructor.
-
-## exports.Multiplexer
-
-Expose Multiplexer constructor.
-
-## exports.utils
-
-Expose utils.
-
-## exports.adapters
-
-Expose adapters.
-
-## exports#create([opts])
-
-Create a Server instance.
-
-See: exports.Server
-
-### Params:
-
-* **Object** *[opts]* 
-
-### Return:
-
-* **Server** 
-
-
-
-# server/Message.js
-
-## Message(server)
-
-Message constructor - a higher level way to build and send a message.
-
-### Params:
-
-* **Server** *server* 
-
-## recipients
-
-Define recipients.
-
-### Params:
-
-* **Array|String|Number** *recipients* you can pass multiple recipients using
-
-### Return:
-
-* **Message** this
-
-## Message#event(event)
-
-Define an event name. If no event defined, the message can be subscribed
-on the client using &quot;message&quot; event.
-
-### Params:
-
-* **String** *event* 
-
-### Return:
-
-* **Message** this
-
-## Message#data(data)
-
-Define data to be send within a message
-
-### Params:
-
-* **Mixed** *data* 
-
-## Message#send(callback)
-
-Send the message. Message is sent successful if every recipient has confirmed
-the delivery. Callback is called with &quot;true&quot; as second parameter if succeeded.
-
-### Params:
-
-* **Function** *callback* 
-
-### Return:
-
-* **Message** this
-
-## Message#broadcast(callback)
-
-Broadcast a message. There is no delivery confirmation. Callback is called
-after the message is stored.
-
-### Params:
-
-* **Function** *callback* 
-
-### Return:
-
-* **Message** this
 
 
 
@@ -241,7 +176,7 @@ Params object:
 
 ## Server#close(client)
 
-Close connection to the client.
+Close connection to one/all clients.
 
 ### Params:
 
@@ -297,58 +232,6 @@ Recommended to use a Server#message which is a higher level to send a message.
 ### Return:
 
 * **Server** this
-
-
-
-# shared/Multiplexer.js
-
-## Multiplexer(opts)
-
-Multiplexer constructor.
-
-### Params:
-
-* **Object** *opts* 
-
-## Multiplexer#add(messages)
-
-Add message(s).
-
-### Params:
-
-* **Mixed** *messages* 
-
-### Return:
-
-* **Multiplexer** this
-
-## Multiplexer#reset([emit])
-
-Reset multiplexer, emit &quot;reset&quot; if there are messages.
-
-### Params:
-
-* **Boolean** *[emit]* only emit &quot;reset&quot; if true.
-
-### Return:
-
-* **Multiplexer** this
-
-## Multiplexer#get()
-
-Get messages.
-
-### Return:
-
-* **Array** 
-
-## Multiplexer#stop()
-
-Stop multiplexer
-
-### Return:
-
-* **Multiplexer** this
 
 
 
@@ -508,4 +391,121 @@ This is a workaround to enable docs in mongo grow.
 ### Return:
 
 * **Object** 
+
+
+
+# server/Connection.js
+
+
+
+# server/index.js
+
+## exports.Server
+
+Expose Server constructor.
+
+## exports.Message
+
+Expose Message constructor.
+
+## exports.Connection
+
+Expose Connection constructor.
+
+## exports.Multiplexer
+
+Expose Multiplexer constructor.
+
+## exports.utils
+
+Expose utils.
+
+## exports.adapters
+
+Expose adapters.
+
+## exports#create([opts])
+
+Create a Server instance.
+
+See: exports.Server
+
+### Params:
+
+* **Object** *[opts]* 
+
+### Return:
+
+* **Server** 
+
+
+
+# server/Message.js
+
+## Message(server)
+
+Message constructor - a higher level way to build and send a message.
+
+### Params:
+
+* **Server** *server* 
+
+## recipients
+
+Define recipients.
+
+### Params:
+
+* **Array|String|Number** *recipients* you can pass multiple recipients using
+
+### Return:
+
+* **Message** this
+
+## Message#event(event)
+
+Define an event name. If no event defined, the message can be subscribed
+on the client using &quot;message&quot; event.
+
+### Params:
+
+* **String** *event* 
+
+### Return:
+
+* **Message** this
+
+## Message#data(data)
+
+Define data to be send within a message
+
+### Params:
+
+* **Mixed** *data* 
+
+## Message#send(callback)
+
+Send the message. Message is sent successful if every recipient has confirmed
+the delivery. Callback is called with &quot;true&quot; as second parameter if succeeded.
+
+### Params:
+
+* **Function** *callback* 
+
+### Return:
+
+* **Message** this
+
+## Message#broadcast(callback)
+
+Broadcast a message. There is no delivery confirmation. Callback is called
+after the message is stored.
+
+### Params:
+
+* **Function** *callback* 
+
+### Return:
+
+* **Message** this
 

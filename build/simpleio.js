@@ -406,6 +406,7 @@ function Client(options) {
     this._connections = 0;
     this._delivered = [];
     this._reconnectionAttempts = 1;
+    this._id = $.uid();
 }
 
 /**
@@ -490,6 +491,7 @@ Client.prototype._open = function(immediately, data) {
     var self = this;
 
     data || (data = {});
+    data.client = this._id;
 
     if (!this._polling) {
         return this;
@@ -522,7 +524,7 @@ Client.prototype._open = function(immediately, data) {
         async: true,
 
         // Server will close request if needed, ensure here
-        // not using settings from global setup
+        // not using settings from global setup.
         timeout: 1000 * 60 * 2,
         success: function(data) {
             self._onSuccess(data);
