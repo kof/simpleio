@@ -81,6 +81,81 @@ See: Client
 
 
 
+# server/Adapter.js
+
+
+
+# server/Message.js
+
+## Message(server)
+
+Message constructor - a higher level way to build and send a message.
+
+### Params:
+
+* **Server** *server* 
+
+## recipients
+
+Define recipients.
+
+### Params:
+
+* **Array|String|Number** *recipients* you can pass multiple recipients using
+
+### Return:
+
+* **Message** this
+
+## Message#event(event)
+
+Define an event name. If no event defined, the message can be subscribed
+on the client using &quot;message&quot; event.
+
+### Params:
+
+* **String** *event* 
+
+### Return:
+
+* **Message** this
+
+## Message#data(data)
+
+Define data to be send within a message
+
+### Params:
+
+* **Mixed** *data* 
+
+## Message#send(callback)
+
+Send the message. Message is sent successful if every recipient has confirmed
+the delivery. Callback is called with &quot;true&quot; as second parameter if succeeded.
+
+### Params:
+
+* **Function** *callback* 
+
+### Return:
+
+* **Message** this
+
+## Message#broadcast(callback)
+
+Broadcast a message. There is no delivery confirmation. Callback is called
+after the message is stored.
+
+### Params:
+
+* **Function** *callback* 
+
+### Return:
+
+* **Message** this
+
+
+
 # shared/Multiplexer.js
 
 ## Multiplexer(opts)
@@ -133,7 +208,117 @@ Stop multiplexer
 
 
 
-# server/Adapter.js
+# shared/utils.js
+
+## exports.isArray
+
+Crossengine detecttion if passed object is an array.
+
+### Params:
+
+* **Object** *obj* 
+
+### Return:
+
+* **Boolean** 
+
+## exports.now
+
+Crossbrowser Date.now.
+
+### Return:
+
+* **Number** 
+
+## exports#each(obj, iterator, [context])
+
+The cornerstone, an `each` implementation, aka `forEach`.
+Handles objects with the built-in `forEach`, arrays, and raw objects.
+Delegates to **ECMAScript 5**'s native `forEach` if available.
+
+### Params:
+
+* **Object** *obj* 
+
+* **Function** *iterator* 
+
+* **Object** *[context]* 
+
+## exports#has(obj, key)
+
+Shortcut for hasOwnProperty.
+
+### Params:
+
+* **Object** *obj* 
+
+* **String** *key* 
+
+### Return:
+
+* **Boolean** 
+
+## exports#extend(obj)
+
+Extend first passed object by the following.
+
+### Params:
+
+* **Object** *obj* 
+
+## exports#uid()
+
+Generate a unique id.
+
+### Return:
+
+* **Number** 
+
+
+
+# server/index.js
+
+## exports.Server
+
+Expose Server constructor.
+
+## exports.Message
+
+Expose Message constructor.
+
+## exports.Connection
+
+Expose Connection constructor.
+
+## exports.Multiplexer
+
+Expose Multiplexer constructor.
+
+## exports.utils
+
+Expose utils.
+
+## exports.adapters
+
+Expose adapters.
+
+## exports#create([opts])
+
+Create a Server instance.
+
+See: exports.Server
+
+### Params:
+
+* **Object** *[opts]* 
+
+### Return:
+
+* **Server** 
+
+
+
+# server/Connection.js
 
 
 
@@ -235,74 +420,6 @@ Recommended to use a Server#message which is a higher level to send a message.
 
 
 
-# shared/utils.js
-
-## exports.isArray
-
-Crossengine detecttion if passed object is an array.
-
-### Params:
-
-* **Object** *obj* 
-
-### Return:
-
-* **Boolean** 
-
-## exports.now
-
-Crossbrowser Date.now.
-
-### Return:
-
-* **Number** 
-
-## exports#each(obj, iterator, [context])
-
-The cornerstone, an `each` implementation, aka `forEach`.
-Handles objects with the built-in `forEach`, arrays, and raw objects.
-Delegates to **ECMAScript 5**'s native `forEach` if available.
-
-### Params:
-
-* **Object** *obj* 
-
-* **Function** *iterator* 
-
-* **Object** *[context]* 
-
-## exports#has(obj, key)
-
-Shortcut for hasOwnProperty.
-
-### Params:
-
-* **Object** *obj* 
-
-* **String** *key* 
-
-### Return:
-
-* **Boolean** 
-
-## exports#extend(obj)
-
-Extend first passed object by the following.
-
-### Params:
-
-* **Object** *obj* 
-
-## exports#uid()
-
-Generate a unique id.
-
-### Return:
-
-* **Number** 
-
-
-
 # server/adapters/Memory.js
 
 ## Memory#open(sender, callback)
@@ -391,121 +508,4 @@ This is a workaround to enable docs in mongo grow.
 ### Return:
 
 * **Object** 
-
-
-
-# server/Connection.js
-
-
-
-# server/index.js
-
-## exports.Server
-
-Expose Server constructor.
-
-## exports.Message
-
-Expose Message constructor.
-
-## exports.Connection
-
-Expose Connection constructor.
-
-## exports.Multiplexer
-
-Expose Multiplexer constructor.
-
-## exports.utils
-
-Expose utils.
-
-## exports.adapters
-
-Expose adapters.
-
-## exports#create([opts])
-
-Create a Server instance.
-
-See: exports.Server
-
-### Params:
-
-* **Object** *[opts]* 
-
-### Return:
-
-* **Server** 
-
-
-
-# server/Message.js
-
-## Message(server)
-
-Message constructor - a higher level way to build and send a message.
-
-### Params:
-
-* **Server** *server* 
-
-## recipients
-
-Define recipients.
-
-### Params:
-
-* **Array|String|Number** *recipients* you can pass multiple recipients using
-
-### Return:
-
-* **Message** this
-
-## Message#event(event)
-
-Define an event name. If no event defined, the message can be subscribed
-on the client using &quot;message&quot; event.
-
-### Params:
-
-* **String** *event* 
-
-### Return:
-
-* **Message** this
-
-## Message#data(data)
-
-Define data to be send within a message
-
-### Params:
-
-* **Mixed** *data* 
-
-## Message#send(callback)
-
-Send the message. Message is sent successful if every recipient has confirmed
-the delivery. Callback is called with &quot;true&quot; as second parameter if succeeded.
-
-### Params:
-
-* **Function** *callback* 
-
-### Return:
-
-* **Message** this
-
-## Message#broadcast(callback)
-
-Broadcast a message. There is no delivery confirmation. Callback is called
-after the message is stored.
-
-### Params:
-
-* **Function** *callback* 
-
-### Return:
-
-* **Message** this
 

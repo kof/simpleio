@@ -96,8 +96,6 @@ See [api](./api.md)
                 // Next steps here.
             });
 
-1. Authorize the user, assign client id and user id if not already done. You might want to save this 2 in session storage. Save the session manually, because this request will not be closed for some amount of seconds.
-
 1. Create incomming connection whithin simpleio:
 
         var connection = simpleioServer.open({

@@ -21,23 +21,10 @@ express()
     .use(express.session({secret: '123456'}))
     .all('/simpleio', function(req, res, next) {
         var connection,
-            userId = req.session.userId,
-            save;
-
-        if (!userId) {
-            userId = req.session.userId = req.param('userId');
-            save = true;
-        }
-
+            userId = req.session.userId = req.param('userId') || req.session.userId;
 
         if (enabledUsers.indexOf(userId) < 0 ) {
             return res.send('Not authorized.', 401);
-        }
-
-        // Save the session manually because connect will do this only after
-        // request is closed, but this one will remain for some seconds.
-        if (save) {
-            req.session.save();
         }
 
         connection = simpleioServer.open({
