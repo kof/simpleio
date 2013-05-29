@@ -522,14 +522,16 @@ Client.prototype._open = function(immediately, data) {
         cache: false,
         dataType: 'json',
         async: true,
-
+        global: false,
         // Server will close request if needed, ensure here
         // not using settings from global setup.
         timeout: 1000 * 60 * 2,
-        success: function(data) {
+        success: function(data, status, xhr) {
+            self.emit('success', data, status, xhr);
             self._onSuccess(data);
         },
-        error: function() {
+        error: function(xhr, status, error) {
+            self.emit('error', xhr, status, error);
             self._onError(data);
         }
     });
@@ -589,7 +591,6 @@ Client.prototype._onError = function(data) {
 Client.prototype._onSuccess = function(data) {
     var self = this;
 
-    this.emit('success');
     this._connections--;
     this._reconnectionAttempts = 1;
 
