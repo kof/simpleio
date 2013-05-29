@@ -427,7 +427,21 @@ Client.options = {
     ajax: null,
     reconnectionDelay: 1000,
     maxReconnectionDelay: 10000,
-    multiplexDuration: 500
+    multiplexDuration: 500,
+    ajaxOptions: {
+        cache: false,
+        dataType: 'json',
+        async: true,
+        global: false,
+        // Server will close request if needed, ensure here
+        // not using settings from global setup.
+        timeout: 1000 * 60 * 2,
+
+        // Define complete callback to overwrite the same from the global setup
+        // and to avoid conflicts.
+        complete: $.noop,
+        simpleio: true
+    }
 };
 
 Emitter(Client.prototype);
@@ -515,17 +529,10 @@ Client.prototype._open = function(immediately, data) {
 
     this._connections++;
 
-    this._xhr = this.ajax({
+    this._xhr = this.ajax($.extend({}, this.options.ajaxOptions, {
         url: this.options.url,
         type: data.messages || data.delivered ? 'post' : 'get',
         data: data,
-        cache: false,
-        dataType: 'json',
-        async: true,
-        global: false,
-        // Server will close request if needed, ensure here
-        // not using settings from global setup.
-        timeout: 1000 * 60 * 2,
         success: function(data, status, xhr) {
             self.emit('success', data, status, xhr);
             self._onSuccess(data);
@@ -533,9 +540,8 @@ Client.prototype._open = function(immediately, data) {
         error: function(xhr, status, error) {
             self.emit('error', xhr, status, error);
             self._onError(data);
-        },
-        simpleio: true
-    });
+        }
+    }));
 
     return this;
 };
@@ -794,6 +800,13 @@ exports.extend = function(obj) {
 exports.uid = function() {
     return Math.round(Math.random() * exports.now());
 };
+
+/**
+ * No operation.
+ *
+ * @api public
+ */
+exports.noop = function() {};
 
 });
 require.alias("component-emitter/index.js", "simpleio/deps/emitter/index.js");
