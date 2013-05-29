@@ -533,7 +533,8 @@ Client.prototype._open = function(immediately, data) {
         error: function(xhr, status, error) {
             self.emit('error', xhr, status, error);
             self._onError(data);
-        }
+        },
+        simpleio: true
     });
 
     return this;
