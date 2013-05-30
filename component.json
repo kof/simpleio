@@ -1,6 +1,6 @@
 {
   "name": "simpleio",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Simple xhr-polling based communication.",
   "author": {
     "name": "Oleg Slobodskoi",
