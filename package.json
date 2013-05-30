@@ -1,7 +1,7 @@
 {
     "name": "simpleio",
     "description": "Simple xhr-polling based communication.",
-    "version": "0.1.11",
+    "version": "0.1.12",
     "author": {
         "name": "Oleg Slobodskoi",
         "email": "oleg008@gmail.com"
@@ -22,7 +22,7 @@
     ],
     "engines": {},
     "dependencies": {
-        "mubsub": "1.0.0",
+        "mubsub": "1.0.1",
         "emitter-component": "1.0.0"
     },
     "devDependencies": {
