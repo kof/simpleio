@@ -81,6 +81,225 @@ See: Client
 
 
 
+# server/Adapter.js
+
+
+
+# server/index.js
+
+## exports.Server
+
+Expose Server constructor.
+
+## exports.Message
+
+Expose Message constructor.
+
+## exports.Connection
+
+Expose Connection constructor.
+
+## exports.Multiplexer
+
+Expose Multiplexer constructor.
+
+## exports.utils
+
+Expose utils.
+
+## exports.adapters
+
+Expose adapters.
+
+## exports#create([opts])
+
+Create a Server instance.
+
+See: exports.Server
+
+### Params:
+
+* **Object** *[opts]* 
+
+### Return:
+
+* **Server** 
+
+
+
+# server/Connection.js
+
+
+
+# server/Message.js
+
+## Message(server)
+
+Message constructor - a higher level way to build and send a message.
+
+### Params:
+
+* **Server** *server* 
+
+## recipients
+
+Define recipients.
+
+### Params:
+
+* **Array|String|Number** *recipients* you can pass multiple recipients using
+
+### Return:
+
+* **Message** this
+
+## Message#event(event)
+
+Define an event name. If no event defined, the message can be subscribed
+on the client using &quot;message&quot; event.
+
+### Params:
+
+* **String** *event* 
+
+### Return:
+
+* **Message** this
+
+## Message#data(data)
+
+Define data to be send within a message
+
+### Params:
+
+* **Mixed** *data* 
+
+## Message#send(callback)
+
+Send the message. Message is sent successful if every recipient has confirmed
+the delivery. Callback is called with &quot;true&quot; as second parameter if succeeded.
+
+### Params:
+
+* **Function** *callback* 
+
+### Return:
+
+* **Message** this
+
+## Message#broadcast(callback)
+
+Broadcast a message. There is no delivery confirmation. Callback is called
+after the message is stored.
+
+### Params:
+
+* **Function** *callback* 
+
+### Return:
+
+* **Message** this
+
+
+
+# server/Server.js
+
+## Server([options])
+
+Server constructor.
+
+### Params:
+
+* **Object** *[options]* 
+
+## Server.options
+
+Default options, will be overwritten by options passed to the Server.
+
+ - `deliveryTimeout` Message is not delivered if confirmation was not received during this time
+ - `keepAlive` amount of ms to keep connection open. (Heroku requires this value to be less than 30s.)
+ - `disconnectedAfter` amount of ms after which client counts as disconnected
+ - `multiplexDuration` amount of ms messages will be collected before send
+
+## Server#open(params)
+
+Client has opened a connection.
+
+Params object:
+
+ - `user` user id
+ - `client` client id of the user (one user can have multiple clients)
+ - `delivered` optional delivered messages ids array
+
+### Params:
+
+* **Object** *params* 
+
+### Return:
+
+* **Connection** 
+
+## Server#close(client)
+
+Close connection to one/all clients.
+
+### Params:
+
+* **String|Number** *client* id
+
+### Return:
+
+* **Server** this
+
+## Server#destroy()
+
+Destroy the server.
+
+### Return:
+
+* **Server** this
+
+## Server#message()
+
+Create a message.
+
+### Return:
+
+* **Message** 
+
+## Server#connected(callback)
+
+Get connected users.
+
+### Params:
+
+* **Function** *callback* 
+
+### Return:
+
+* **Server** this
+
+## Server#send(recipients, data, [callback])
+
+Send a message to recipient(s). If all recipients receive and confirm the
+message, second callback parameter will be true.
+
+Recommended to use a Server#message which is a higher level to send a message.
+
+### Params:
+
+* **String|Number|Array** *recipients* one or multiple recipients
+
+* **Object** *data* to send
+
+* **Function** *[callback]* 
+
+### Return:
+
+* **Server** this
+
+
+
 # shared/Multiplexer.js
 
 ## Multiplexer(opts)
@@ -199,111 +418,9 @@ Generate a unique id.
 
 * **Number** 
 
+## exports#noop()
 
-
-# server/Connection.js
-
-
-
-# server/Server.js
-
-## Server([options])
-
-Server constructor.
-
-### Params:
-
-* **Object** *[options]* 
-
-## Server.options
-
-Default options, will be overwritten by options passed to the Server.
-
- - `deliveryTimeout` Message is not delivered if confirmation was not received during this time
- - `keepAlive` amount of ms to keep connection open. (Heroku requires this value to be less than 30s.)
- - `disconnectedAfter` amount of ms after which client counts as disconnected
- - `multiplexDuration` amount of ms messages will be collected before send
-
-## Server#open(params)
-
-Client has opened a connection.
-
-Params object:
-
- - `user` user id
- - `client` client id of the user (one user can have multiple clients)
- - `delivered` optional delivered messages ids array
-
-### Params:
-
-* **Object** *params* 
-
-### Return:
-
-* **Connection** 
-
-## Server#close(client)
-
-Close connection to one/all clients.
-
-### Params:
-
-* **String|Number** *client* id
-
-### Return:
-
-* **Server** this
-
-## Server#destroy()
-
-Destroy the server.
-
-### Return:
-
-* **Server** this
-
-## Server#message()
-
-Create a message.
-
-### Return:
-
-* **Message** 
-
-## Server#connected(callback)
-
-Get connected users.
-
-### Params:
-
-* **Function** *callback* 
-
-### Return:
-
-* **Server** this
-
-## Server#send(recipients, data, [callback])
-
-Send a message to recipient(s). If all recipients receive and confirm the
-message, second callback parameter will be true.
-
-Recommended to use a Server#message which is a higher level to send a message.
-
-### Params:
-
-* **String|Number|Array** *recipients* one or multiple recipients
-
-* **Object** *data* to send
-
-* **Function** *[callback]* 
-
-### Return:
-
-* **Server** this
-
-
-
-# server/Adapter.js
+No operation.
 
 
 
@@ -354,8 +471,8 @@ Get all messages for the recipient, which are deliverable.
 
 ## Mongo#_getPlaceholder(amount)
 
-Create a placeholder object for `amount` of delivery confirmations.
-This is a workaround to enable docs in mongo grow.
+Create a placeholder object for `amount` of client ids for delivery confirmations.
+This is a workaround to enable docs in capped mongo collection to grow.
 
 ### Params:
 
@@ -364,119 +481,6 @@ This is a workaround to enable docs in mongo grow.
 ### Return:
 
 * **Object** 
-
-
-
-# server/index.js
-
-## exports.Server
-
-Expose Server constructor.
-
-## exports.Message
-
-Expose Message constructor.
-
-## exports.Connection
-
-Expose Connection constructor.
-
-## exports.Multiplexer
-
-Expose Multiplexer constructor.
-
-## exports.utils
-
-Expose utils.
-
-## exports.adapters
-
-Expose adapters.
-
-## exports#create([opts])
-
-Create a Server instance.
-
-See: exports.Server
-
-### Params:
-
-* **Object** *[opts]* 
-
-### Return:
-
-* **Server** 
-
-
-
-# server/Message.js
-
-## Message(server)
-
-Message constructor - a higher level way to build and send a message.
-
-### Params:
-
-* **Server** *server* 
-
-## recipients
-
-Define recipients.
-
-### Params:
-
-* **Array|String|Number** *recipients* you can pass multiple recipients using
-
-### Return:
-
-* **Message** this
-
-## Message#event(event)
-
-Define an event name. If no event defined, the message can be subscribed
-on the client using &quot;message&quot; event.
-
-### Params:
-
-* **String** *event* 
-
-### Return:
-
-* **Message** this
-
-## Message#data(data)
-
-Define data to be send within a message
-
-### Params:
-
-* **Mixed** *data* 
-
-## Message#send(callback)
-
-Send the message. Message is sent successful if every recipient has confirmed
-the delivery. Callback is called with &quot;true&quot; as second parameter if succeeded.
-
-### Params:
-
-* **Function** *callback* 
-
-### Return:
-
-* **Message** this
-
-## Message#broadcast(callback)
-
-Broadcast a message. There is no delivery confirmation. Callback is called
-after the message is stored.
-
-### Params:
-
-* **Function** *callback* 
-
-### Return:
-
-* **Message** this
 
 
 
