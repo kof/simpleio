@@ -28,7 +28,9 @@ See [examples](./examples)
 
 ## API
 
-See [api](./api.md)
+Client and server side javascript API [api](./api.md)
+
+REST API [api](./rest-api.md)
 
 ## Usage on the client
 
