@@ -11,7 +11,8 @@
 
 ## REST API
 
-See json schema http://json-schema.org
+- Read URI template spec http://tools.ietf.org/html/rfc6570
+- Read JSON schema spec http://json-schema.org
 
 ```javascript
 POST /simpleio
