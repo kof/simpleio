@@ -30,7 +30,7 @@ See [examples](./examples)
 
 Client and server side javascript API [api](./api.md)
 
-REST API [api](./rest-api.md)
+[Client spec](./client-spec.md)
 
 ## Usage on the client
 
