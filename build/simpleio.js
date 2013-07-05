@@ -450,14 +450,15 @@ module.exports = Client;
 /**
  * Start polling.
  *
- * @param {Object} [data] data to send with the first request.
+ * @param {Object} [data] data to send with every request.
  * @return {Client} this
  * @api public
  */
 Client.prototype.connect = function(data) {
     if (!this._polling) {
         this._polling = true;
-        this._open(true, data);
+        this._defaultData = data;
+        this._open(true);
     }
 
     return this;
@@ -497,14 +498,13 @@ Client.prototype.send = function(message, callback) {
  * Open connection.
  *
  * @param {Boolean} [immediately] create request immediately.
- * @param {Object} [data] additional data to be send.
  * @return {Client} this
  * @api private
  */
-Client.prototype._open = function(immediately, data) {
-    var self = this;
+Client.prototype._open = function(immediately) {
+    var self = this,
+        data = this._defaultData ? $.extend({}, this._defaultData) : {};
 
-    data || (data = {});
     data.client = this._id;
 
     if (!this._polling) {

@@ -4,7 +4,8 @@
 - optimized for horizontal scaling
 - reliable message delivery (built-in delivery confirmation)
 - multiplexing on the server and client
-- lightweight (appr. 2.5 kb minified and gzipped on the client)
+- lightweight client (appr. 2.5 kb minified and gzipped on the client)
+- simple client spec, which can be implemented easily in any language
 
 ## Todo
 

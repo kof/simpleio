@@ -1,13 +1,19 @@
 ## Description
 
-1. Client should implement http log polling.
-1. Request will remain open unless
+1. Client should implement http long polling.
+1. Client should remain open request until its closed by the server.
+1. Server will respond in this cases:
     1. There is a new messages for the client.
-    1. Client has new messages for the server.
-    1. Timeout defined on the server is occurred.
+    1. Timeout defined on the server is occurred, client should reconnect.
+1. If client has messages to send, it should create a new request, if there is already an open request - it should remain open.
 1. GET can be used if there are no `delivered` and `messages` to send, otherwise POST.
-1. If client gets a successful response, it should reconnect immediately.
-1. If client gets an error, it should start reconnect using incremental delay. Client should increment the delay until `maxReconnectionDelay` is reached.
+1. If client gets a successful response (200 status code), it should reconnect immediately.
+1. If client gets an error (anything else than 200 status code), it should reconnect using incremental delay.
+    1. Client should increment the delay until `maxReconnectionDelay` is reached.
+    1. Client should reconnect endless amount of times even if `maxReconnectionDelay` is reached.
+1. To minimize reconnects amount, client should multiplex messages.
+1. When client gets new messages, it should send a delivery confirmation immediately.
+1. Client should implement public options and methods defined in [api.md](./api.md).
 
 ## REST API
 
@@ -21,15 +27,18 @@ POST /simpleio
     "properties": {
         "client": {
             "type": "number",
-            "required": true
+            "required": true,
+            "description": "Client id randomly generated which should be unique."
         },
         "delivered": {
             type: "array",
-            "items": {"type": "string"}
+            "items": {"type": "string"},
+            "description": "Message ids of received messages."
         },
         "messages": {
             type: "array",
-            "items": {"type": "any"}
+            "items": {"type": "any"},
+            "description": "Array of messages which can contain elements of any type."
         }
     }
 }
@@ -60,7 +69,8 @@ POST /simpleio
             }
         },
         "status": {
-            "enum": ["polling timeout", "new messages"]
+            "enum": ["polling timeout", "new messages"],
+            "description": "Status message is for debugging only."
         }
     }
 }

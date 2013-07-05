@@ -27,7 +27,7 @@ Start polling.
 
 ### Params:
 
-* **Object** *[data]* data to send with the first request.
+* **Object** *[data]* data to send with every request.
 
 ### Return:
 
@@ -82,48 +82,6 @@ See: Client
 
 
 # server/Adapter.js
-
-
-
-# server/index.js
-
-## exports.Server
-
-Expose Server constructor.
-
-## exports.Message
-
-Expose Message constructor.
-
-## exports.Connection
-
-Expose Connection constructor.
-
-## exports.Multiplexer
-
-Expose Multiplexer constructor.
-
-## exports.utils
-
-Expose utils.
-
-## exports.adapters
-
-Expose adapters.
-
-## exports#create([opts])
-
-Create a Server instance.
-
-See: exports.Server
-
-### Params:
-
-* **Object** *[opts]* 
-
-### Return:
-
-* **Server** 
 
 
 
@@ -300,6 +258,48 @@ Recommended to use a Server#message which is a higher level to send a message.
 
 
 
+# server/index.js
+
+## exports.Server
+
+Expose Server constructor.
+
+## exports.Message
+
+Expose Message constructor.
+
+## exports.Connection
+
+Expose Connection constructor.
+
+## exports.Multiplexer
+
+Expose Multiplexer constructor.
+
+## exports.utils
+
+Expose utils.
+
+## exports.adapters
+
+Expose adapters.
+
+## exports#create([opts])
+
+Create a Server instance.
+
+See: exports.Server
+
+### Params:
+
+* **Object** *[opts]* 
+
+### Return:
+
+* **Server** 
+
+
+
 # shared/Multiplexer.js
 
 ## Multiplexer(opts)
@@ -424,6 +424,53 @@ No operation.
 
 
 
+# server/adapters/Memory.js
+
+## Memory#open(sender, callback)
+
+A client opened a connection. Put the document to determine later
+if the client is connected.
+
+### Params:
+
+* **String|Number** *sender* 
+
+* **Function** *callback* 
+
+### Return:
+
+* **Mongo** this
+
+## Memory#connected(since, callback)
+
+Get users who opened a connection since x date.
+
+### Params:
+
+* **Date** *since* the date since user has send messages
+
+* **Function** *callback* 
+
+### Return:
+
+* **Mongo** this
+
+## Memory#get(recipient, since, callback, this)
+
+Get all messages for the recipient, which are deliverable.
+
+### Params:
+
+* **String** *recipient* id
+
+* **Date** *since* which date to consider messages, the oldest message would
+
+* **Function** *callback* 
+
+* **Memory** *this* 
+
+
+
 # server/adapters/Mongo.js
 
 ## Mongo#open(sender, callback)
@@ -481,51 +528,4 @@ This is a workaround to enable docs in capped mongo collection to grow.
 ### Return:
 
 * **Object** 
-
-
-
-# server/adapters/Memory.js
-
-## Memory#open(sender, callback)
-
-A client opened a connection. Put the document to determine later
-if the client is connected.
-
-### Params:
-
-* **String|Number** *sender* 
-
-* **Function** *callback* 
-
-### Return:
-
-* **Mongo** this
-
-## Memory#connected(since, callback)
-
-Get users who opened a connection since x date.
-
-### Params:
-
-* **Date** *since* the date since user has send messages
-
-* **Function** *callback* 
-
-### Return:
-
-* **Mongo** this
-
-## Memory#get(recipient, since, callback, this)
-
-Get all messages for the recipient, which are deliverable.
-
-### Params:
-
-* **String** *recipient* id
-
-* **Date** *since* which date to consider messages, the oldest message would
-
-* **Function** *callback* 
-
-* **Memory** *this* 
 
