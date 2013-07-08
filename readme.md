@@ -1,4 +1,4 @@
-## Simple xhr-polling based communication.
+## Simple long polling based communication.
 
 - support for router/balancer without sticky sessions (f.e. Heroku)
 - optimized for horizontal scaling
