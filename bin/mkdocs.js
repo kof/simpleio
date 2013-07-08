@@ -6,27 +6,32 @@ var findit = require('findit'),
 var base = path.join(__dirname, '..'),
     lib = path.join(base, 'lib'),
     components = path.join(base, 'components'),
-    target = path.join(base, 'api.md'),
+    target = path.join(base,'doc', 'api.md'),
     template = path.join(__dirname, 'api.ejs'),
     docs = '',
+    overview = '# Map',
     todo = 0;
 
-findit.sync(lib).concat(findit.sync(components)).forEach(function(file, i, files) {
-    if (!/\.js$/.test(file)) {
-        return;
-    }
-
-    todo++;
-    markdox.process(file, {template: template, formatter: formatter}, function(err, doc) {
-        if (err) return console.error(err);
-        docs += doc;
-        todo--;
-
-        if (!todo) {
-            fs.writeFileSync(target, docs);
+findit.sync(lib)
+    .concat(findit.sync(components))
+    .sort()
+    .forEach(function(file) {
+        if (!/\.js$/.test(file)) {
+            return;
         }
+
+        todo++;
+        overview += '\n  - ' + file.substr(base.length);
+        markdox.process(file, {template: template, formatter: formatter}, function(err, doc) {
+            if (err) return console.error(err);
+            docs += doc;
+            todo--;
+
+            if (!todo) {
+                fs.writeFileSync(target, overview + docs);
+            }
+        });
     });
-});
 
 function formatter(doc) {
     doc.javadoc.forEach(function(comment) {
@@ -42,7 +47,7 @@ function formatter(doc) {
         comment.isPrivate = comment.raw.isPrivate;
     });
 
-    doc.title = doc.filename.substr(base.length + 1);
+    doc.title = doc.filename.substr(base.length);
 
     return doc;
 }

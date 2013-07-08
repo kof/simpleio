@@ -31,9 +31,9 @@ See [examples](./examples)
 
 ## API
 
-[Client and server side javascript API](./api.md)
+[Client and server side javascript API](./doc/api.md)
 
-[Spec for clients](./client-spec.md)
+[Spec for clients](./doc/client-spec.md)
 
 ## Usage on the client
 
