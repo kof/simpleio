@@ -1,15 +1,15 @@
 # Map
   - [/components/component-emitter/index.js] (#componentscomponent-emitterindexjs)
-  - [/lib/client/Client.js] (#libclientClientjs)
+  - [/lib/client/Client.js] (#libclientclientjs)
   - [/lib/client/index.js] (#libclientindexjs)
-  - [/lib/server/Adapter.js] (#libserverAdapterjs)
-  - [/lib/server/Connection.js] (#libserverConnectionjs)
-  - [/lib/server/Message.js] (#libserverMessagejs)
-  - [/lib/server/Server.js] (#libserverServerjs)
-  - [/lib/server/adapters/Memory.js] (#libserveradaptersMemoryjs)
-  - [/lib/server/adapters/Mongo.js] (#libserveradaptersMongojs)
+  - [/lib/server/Adapter.js] (#libserveradapterjs)
+  - [/lib/server/Connection.js] (#libserverconnectionjs)
+  - [/lib/server/Message.js] (#libservermessagejs)
+  - [/lib/server/Server.js] (#libserverserverjs)
+  - [/lib/server/adapters/Memory.js] (#libserveradaptersmemoryjs)
+  - [/lib/server/adapters/Mongo.js] (#libserveradaptersmongojs)
   - [/lib/server/index.js] (#libserverindexjs)
-  - [/lib/shared/Multiplexer.js] (#libsharedMultiplexerjs)
+  - [/lib/shared/Multiplexer.js] (#libsharedmultiplexerjs)
   - [/lib/shared/utils.js] (#libsharedutilsjs)
 
 # /components/component-emitter/index.js

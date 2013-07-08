@@ -7,33 +7,40 @@ var base = path.join(__dirname, '..'),
     lib = path.join(base, 'lib'),
     components = path.join(base, 'components'),
     target = path.join(base,'doc', 'api.md'),
-    template = path.join(__dirname, 'api.ejs'),
-    docs = '',
-    overview = '# Map',
-    todo = 0;
+    template = path.join(__dirname, 'api.ejs');
 
-findit.sync(lib)
-    .concat(findit.sync(components))
-    .sort()
-    .forEach(function(file) {
-        var relFile = file.substr(base.length);
+function make() {
+    var docs = '',
+        overview = '# Map',
+        todo = 0;
 
-        if (!/\.js$/.test(file)) {
-            return;
-        }
+    findit.sync(lib)
+        .concat(findit.sync(components))
+        .sort()
+        .forEach(function(file) {
+            var relFile = file.substr(base.length);
 
-        todo++;
-        overview += '\n  - [' + relFile + '] ' + '(#' + relFile.replace(/[/.]*/g, '') + ')';
-        markdox.process(file, {template: template, formatter: formatter}, function(err, doc) {
-            if (err) return console.error(err);
-            docs += doc;
-            todo--;
-
-            if (!todo) {
-                fs.writeFileSync(target, overview + docs);
+            if (!/\.js$/.test(file)) {
+                return;
             }
+
+            todo++;
+            overview += '\n  - [' + relFile + '] ' + '(#' + makeGithubLink(relFile) + ')';
+            markdox.process(file, {template: template, formatter: formatter}, function(err, doc) {
+                if (err) return console.error(err);
+                docs += doc;
+                todo--;
+
+                if (!todo) {
+                    fs.writeFileSync(target, overview + docs);
+                }
+            });
         });
-    });
+}
+
+function makeGithubLink(str) {
+    return str.toLowerCase().replace(/[/.]*/g, '');
+}
 
 function formatter(doc) {
     doc.javadoc.forEach(function(comment) {
@@ -53,3 +60,5 @@ function formatter(doc) {
 
     return doc;
 }
+
+make();
