@@ -38,7 +38,7 @@ See [examples](./examples)
 
 [Spec for clients](./doc/client-spec.md)
 
-## Usage on the client
+## Usage example on the client
 
 1. Include build/simpleio.min.js on your site.
 
@@ -79,7 +79,7 @@ See [examples](./examples)
             console.log('Message sent');
         });
 
-## Usage on the server
+## Usage example on the server
 
 1. Create simpleio server:
 
