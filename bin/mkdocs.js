@@ -3,13 +3,15 @@ var findit = require('findit'),
     path = require('path'),
     fs = require('fs');
 
-var lib = path.join(__dirname, '..', 'lib'),
-    target = path.join(__dirname, '..', 'api.md'),
+var base = path.join(__dirname, '..'),
+    lib = path.join(base, 'lib'),
+    components = path.join(base, 'components'),
+    target = path.join(base, 'api.md'),
     template = path.join(__dirname, 'api.ejs'),
     docs = '',
     todo = 0;
 
-findit.sync(lib).forEach(function(file, i, files) {
+findit.sync(lib).concat(findit.sync(components)).forEach(function(file, i, files) {
     if (!/\.js$/.test(file)) {
         return;
     }
@@ -40,7 +42,7 @@ function formatter(doc) {
         comment.isPrivate = comment.raw.isPrivate;
     });
 
-    doc.title = doc.filename.substr(lib.length + 1);
+    doc.title = doc.filename.substr(base.length + 1);
 
     return doc;
 }

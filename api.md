@@ -1,10 +1,11 @@
 
 
-# client/Client.js
+# lib/client/Client.js
 
 ## Client(options)
 
 Client constructor.
+Inherits from Emitter.
 
 See: Emitter
 
@@ -59,52 +60,9 @@ Send message to the server.
 
 * **Client** this
 
-## Client#on(event, callback)
-
-Listen on the given event.
-
-### Params:
-
-* **String** *event* 
-
-* **Function** *callback* 
-
-### Return:
-
-* **Client** this
-
-## Client#off(event, callback)
-
-Remove the given callback for `event` or all
-registered callbacks.
-
-### Params:
-
-* **String** *event* 
-
-* **Function** *callback* 
-
-### Return:
-
-* **Client** this
-
-## Client#on(event, callback)
-
-Listen to some event.
-
-### Params:
-
-* **String** *event* 
-
-* **Function** *callback* 
-
-### Return:
-
-* **Client** this
 
 
-
-# client/index.js
+# lib/client/index.js
 
 ## exports.Client
 
@@ -128,15 +86,15 @@ See: Client
 
 
 
-# server/Adapter.js
+# lib/server/Adapter.js
 
 
 
-# server/Connection.js
+# lib/server/Connection.js
 
 
 
-# server/Message.js
+# lib/server/Message.js
 
 ## Message(server)
 
@@ -207,7 +165,7 @@ after the message is stored.
 
 
 
-# server/Server.js
+# lib/server/Server.js
 
 ## Server([options])
 
@@ -305,7 +263,7 @@ Recommended to use a Server#message which is a higher level to send a message.
 
 
 
-# server/index.js
+# lib/server/index.js
 
 ## exports.Server
 
@@ -347,7 +305,7 @@ See: exports.Server
 
 
 
-# shared/Multiplexer.js
+# lib/shared/Multiplexer.js
 
 ## Multiplexer(opts)
 
@@ -399,7 +357,7 @@ Stop multiplexer
 
 
 
-# shared/utils.js
+# lib/shared/utils.js
 
 ## exports.isArray
 
@@ -471,7 +429,7 @@ No operation.
 
 
 
-# server/adapters/Memory.js
+# lib/server/adapters/Memory.js
 
 ## Memory#open(sender, callback)
 
@@ -518,7 +476,7 @@ Get all messages for the recipient, which are deliverable.
 
 
 
-# server/adapters/Mongo.js
+# lib/server/adapters/Mongo.js
 
 ## Mongo#open(sender, callback)
 
@@ -575,4 +533,92 @@ This is a workaround to enable docs in capped mongo collection to grow.
 ### Return:
 
 * **Object** 
+
+
+
+# components/component-emitter/index.js
+
+## Emitter()
+
+Initialize a new `Emitter`.
+
+## Emitter#on(event, fn)
+
+Listen on the given `event` with `fn`.
+
+### Params:
+
+* **String** *event* 
+
+* **Function** *fn* 
+
+### Return:
+
+* **Emitter** 
+
+## Emitter#once(event, fn)
+
+Adds an `event` listener that will be invoked a single
+time then automatically removed.
+
+### Params:
+
+* **String** *event* 
+
+* **Function** *fn* 
+
+### Return:
+
+* **Emitter** 
+
+Remove the given callback for `event` or all
+registered callbacks.
+
+### Params:
+
+* **String** *event* 
+
+* **Function** *fn* 
+
+### Return:
+
+* **Emitter** 
+
+## Emitter#emit(event, ...)
+
+Emit `event` with the given args.
+
+### Params:
+
+* **String** *event* 
+
+* **Mixed** *...* 
+
+### Return:
+
+* **Emitter** 
+
+## Emitter#listeners(event)
+
+Return array of callbacks for `event`.
+
+### Params:
+
+* **String** *event* 
+
+### Return:
+
+* **Array** 
+
+## Emitter#hasListeners(event)
+
+Check if this emitter has `event` handlers.
+
+### Params:
+
+* **String** *event* 
+
+### Return:
+
+* **Boolean** 
 

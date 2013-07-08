@@ -389,8 +389,10 @@ var Emitter = require('emitter'),
 
 /**
  * Client constructor.
+ * Inherits from Emitter.
  *
  * @param {Object} options
+ * @see Emitter
  * @api public
  */
 function Client(options) {
@@ -495,16 +497,6 @@ Client.prototype.send = function(message, callback) {
 
     return this;
 };
-
-/**
- * Bind an event.
- *
- * @param {String} event
- * @param {Function} callback
- * @return {Client} this
- * @api public
- */
-Client.prototype.on = function() {};
 
 /**
  * Open connection.
