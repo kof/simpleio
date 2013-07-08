@@ -23,7 +23,7 @@ findit.sync(lib)
         }
 
         todo++;
-        overview += '\n  - [' + relFile + '] ' + '(' + relFile.replace(/[/.]*/g, '') + ')';
+        overview += '\n  - [' + relFile + '] ' + '(#' + relFile.replace(/[/.]*/g, '') + ')';
         markdox.process(file, {template: template, formatter: formatter}, function(err, doc) {
             if (err) return console.error(err);
             docs += doc;

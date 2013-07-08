@@ -1,16 +1,16 @@
 # Map
-  - [/components/component-emitter/index.js] (componentscomponent-emitterindexjs)
-  - [/lib/client/Client.js] (libclientClientjs)
-  - [/lib/client/index.js] (libclientindexjs)
-  - [/lib/server/Adapter.js] (libserverAdapterjs)
-  - [/lib/server/Connection.js] (libserverConnectionjs)
-  - [/lib/server/Message.js] (libserverMessagejs)
-  - [/lib/server/Server.js] (libserverServerjs)
-  - [/lib/server/adapters/Memory.js] (libserveradaptersMemoryjs)
-  - [/lib/server/adapters/Mongo.js] (libserveradaptersMongojs)
-  - [/lib/server/index.js] (libserverindexjs)
-  - [/lib/shared/Multiplexer.js] (libsharedMultiplexerjs)
-  - [/lib/shared/utils.js] (libsharedutilsjs)
+  - [/components/component-emitter/index.js] (#componentscomponent-emitterindexjs)
+  - [/lib/client/Client.js] (#libclientClientjs)
+  - [/lib/client/index.js] (#libclientindexjs)
+  - [/lib/server/Adapter.js] (#libserverAdapterjs)
+  - [/lib/server/Connection.js] (#libserverConnectionjs)
+  - [/lib/server/Message.js] (#libserverMessagejs)
+  - [/lib/server/Server.js] (#libserverServerjs)
+  - [/lib/server/adapters/Memory.js] (#libserveradaptersMemoryjs)
+  - [/lib/server/adapters/Mongo.js] (#libserveradaptersMongojs)
+  - [/lib/server/index.js] (#libserverindexjs)
+  - [/lib/shared/Multiplexer.js] (#libsharedMultiplexerjs)
+  - [/lib/shared/utils.js] (#libsharedutilsjs)
 
 # /components/component-emitter/index.js
 
