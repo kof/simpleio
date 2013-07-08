@@ -29,6 +29,9 @@
 
 See [examples](./examples)
 
+- Start the server.js (pass a storage optionally)
+- Open index.html in browser
+
 ## API
 
 [Client and server side javascript API](./doc/api.md)
