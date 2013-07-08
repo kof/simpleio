@@ -16,12 +16,14 @@ findit.sync(lib)
     .concat(findit.sync(components))
     .sort()
     .forEach(function(file) {
+        var relFile = file.substr(base.length);
+
         if (!/\.js$/.test(file)) {
             return;
         }
 
         todo++;
-        overview += '\n  - ' + file.substr(base.length);
+        overview += '\n  - [' + relFile + '] ' + '(' + relFile.replace(/[/.]*/g, '') + ')';
         markdox.process(file, {template: template, formatter: formatter}, function(err, doc) {
             if (err) return console.error(err);
             docs += doc;

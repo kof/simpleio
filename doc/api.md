@@ -1,16 +1,16 @@
 # Map
-  - /components/component-emitter/index.js
-  - /lib/client/Client.js
-  - /lib/client/index.js
-  - /lib/server/Adapter.js
-  - /lib/server/Connection.js
-  - /lib/server/Message.js
-  - /lib/server/Server.js
-  - /lib/server/adapters/Memory.js
-  - /lib/server/adapters/Mongo.js
-  - /lib/server/index.js
-  - /lib/shared/Multiplexer.js
-  - /lib/shared/utils.js
+  - [/components/component-emitter/index.js] (componentscomponent-emitterindexjs)
+  - [/lib/client/Client.js] (libclientClientjs)
+  - [/lib/client/index.js] (libclientindexjs)
+  - [/lib/server/Adapter.js] (libserverAdapterjs)
+  - [/lib/server/Connection.js] (libserverConnectionjs)
+  - [/lib/server/Message.js] (libserverMessagejs)
+  - [/lib/server/Server.js] (libserverServerjs)
+  - [/lib/server/adapters/Memory.js] (libserveradaptersMemoryjs)
+  - [/lib/server/adapters/Mongo.js] (libserveradaptersMongojs)
+  - [/lib/server/index.js] (libserverindexjs)
+  - [/lib/shared/Multiplexer.js] (libsharedMultiplexerjs)
+  - [/lib/shared/utils.js] (libsharedutilsjs)
 
 # /components/component-emitter/index.js
 
@@ -191,6 +191,7 @@ See: Client
 ## Adapter()
 
 Adapter interface.
+Inherits from `Emitter.
 All adapters should inherit from this class.
 
 ## Adapter#dispatch(recipient, data, callback)
@@ -368,6 +369,7 @@ after the message is stored.
 ## Server([options])
 
 Server constructor.
+Inherits from `Emitter`.
 
 ### Params:
 
@@ -470,6 +472,7 @@ Recommended to use a Server#message which is a higher level to send a message.
 ## Memory(opts)
 
 Memory adapter constructor.
+Inherits from `Adapter`.
 
 ### Params:
 
@@ -524,6 +527,7 @@ Mongo adapter constructor.
 ## Mongo.options
 
 Mongo adapter defaults.
+Inherits from `Adapter`.
 
   - `uri` mongo uri
   - `db` mongo options
@@ -607,6 +611,7 @@ See: exports.Server
 ## Multiplexer(opts)
 
 Multiplexer constructor.
+Inherits from `Emitter`.
 
 ### Params:
 
