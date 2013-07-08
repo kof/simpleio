@@ -18,17 +18,21 @@ function make() {
         .concat(findit.sync(components))
         .sort()
         .forEach(function(file) {
-            var relFile = file.substr(base.length);
-
             if (!/\.js$/.test(file)) {
                 return;
             }
 
             todo++;
-            overview += '\n  - [' + relFile + '] ' + '(#' + makeGithubLink(relFile) + ')';
             markdox.process(file, {template: template, formatter: formatter}, function(err, doc) {
+                var relFile = file.substr(base.length);
+
                 if (err) return console.error(err);
-                docs += doc;
+
+                if (doc.trim()) {
+                    overview += '\n  - [' + relFile + '] ' + '(#' + makeGithubLink(relFile) + ')';
+                    docs += doc;
+                }
+
                 todo--;
 
                 if (!todo) {
@@ -43,6 +47,7 @@ function makeGithubLink(str) {
 }
 
 function formatter(doc) {
+    doc.hasPublic = false;
     doc.javadoc.forEach(function(comment) {
         if (comment.raw.ctx) {
 
@@ -54,6 +59,9 @@ function formatter(doc) {
         }
 
         comment.isPrivate = comment.raw.isPrivate;
+        if (!doc.hasPublic && !comment.isPrivate) {
+            doc.hasPublic = true;
+        }
     });
 
     doc.title = doc.filename.substr(base.length);
