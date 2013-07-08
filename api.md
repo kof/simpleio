@@ -6,6 +6,8 @@
 
 Client constructor.
 
+See: Emitter
+
 ### Params:
 
 * **Object** *options* 
@@ -14,12 +16,14 @@ Client constructor.
 
 Default options, will be overwritten by options passed to the constructor.
 
-  - `ajax` required jQuery ajax api
-  - `url` connection url, default is '/simpleio'
+  - `ajax` required jQuery ajax api (web client only)
+  - `url` connection url, default is `/simpleio`
   - `reconnectionDelay` ms amount to wait before to reconnect in case of error,
-     will be increased on every further error until maxReconnectionDelay
-  - `maxReconnectionDelay` max ms amount to wait before to reconnect in case of error
-  - `multiplexDuration` ms amount for multiplexing messages before emitting
+    will be increased on every further error until maxReconnectionDelay, default is `1000`
+  - `maxReconnectionDelay` max ms amount to wait before to reconnect in case of error,
+    default is `10000`
+  - `multiplexDuration` ms amount for multiplexing messages before emitting,
+    default is `500`
 
 ## Client#connect([data])
 
@@ -50,6 +54,49 @@ Send message to the server.
 * **Mixed** *message* message to send.
 
 * **Function** *[callback]* is called when message was send to the server without error.
+
+### Return:
+
+* **Client** this
+
+## Client#on(event, callback)
+
+Listen on the given event.
+
+### Params:
+
+* **String** *event* 
+
+* **Function** *callback* 
+
+### Return:
+
+* **Client** this
+
+## Client#off(event, callback)
+
+Remove the given callback for `event` or all
+registered callbacks.
+
+### Params:
+
+* **String** *event* 
+
+* **Function** *callback* 
+
+### Return:
+
+* **Client** this
+
+## Client#on(event, callback)
+
+Listen to some event.
+
+### Params:
+
+* **String** *event* 
+
+* **Function** *callback* 
 
 ### Return:
 

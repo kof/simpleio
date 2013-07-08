@@ -412,12 +412,14 @@ function Client(options) {
 /**
  * Default options, will be overwritten by options passed to the constructor.
  *
- *   - `ajax` required jQuery ajax api
- *   - `url` connection url, default is '/simpleio'
+ *   - `ajax` required jQuery ajax api (web client only)
+ *   - `url` connection url, default is `/simpleio`
  *   - `reconnectionDelay` ms amount to wait before to reconnect in case of error,
- *      will be increased on every further error until maxReconnectionDelay
- *   - `maxReconnectionDelay` max ms amount to wait before to reconnect in case of error
- *   - `multiplexDuration` ms amount for multiplexing messages before emitting
+ *     will be increased on every further error until maxReconnectionDelay, default is `1000`
+ *   - `maxReconnectionDelay` max ms amount to wait before to reconnect in case of error,
+ *     default is `10000`
+ *   - `multiplexDuration` ms amount for multiplexing messages before emitting,
+ *     default is `500`
  *
  * @type {Object}
  * @api public
@@ -493,6 +495,16 @@ Client.prototype.send = function(message, callback) {
 
     return this;
 };
+
+/**
+ * Bind an event.
+ *
+ * @param {String} event
+ * @param {Function} callback
+ * @return {Client} this
+ * @api public
+ */
+Client.prototype.on = function() {};
 
 /**
  * Open connection.

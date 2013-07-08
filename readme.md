@@ -29,9 +29,9 @@ See [examples](./examples)
 
 ## API
 
-Client and server side javascript API [api](./api.md)
+[Client and server side javascript API](./api.md)
 
-[Client spec](./client-spec.md)
+[Spec for clients](./client-spec.md)
 
 ## Usage on the client
 
@@ -118,7 +118,7 @@ Client and server side javascript API [api](./api.md)
             .once('error', next)
             .on('error', console.error);
 
-1. Read POST param "messages" to get messages client sends to the server:
+1. Read POST param "messages" to get messages from client:
 
         if (req.param('messages')) {
             console.log('Got messages', req.param('messages'));

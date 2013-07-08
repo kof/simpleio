@@ -3,12 +3,12 @@
 1. Client should implement http long polling.
 1. Client should remain open request until its closed by the server.
 1. Server will respond in this cases:
-    1. There is a new messages for the client.
+    1. There are new messages for the client.
     1. Timeout defined on the server is occurred, client should reconnect.
 1. If client has messages to send, it should create a new request, if there is already an open request - it should remain open.
-1. GET can be used if there are no `delivered` and `messages` to send, otherwise POST.
-1. If client gets a successful response (200 status code), it should reconnect immediately.
-1. If client gets an error (anything else than 200 status code), it should reconnect using incremental delay.
+1. HTTP "GET" method can be used if there are no `delivered` and `messages` to send, otherwise "POST" should be used.
+1. If client gets a successful response (status code 200), it should reconnect immediately.
+1. If client gets an error (anything else than status code 200), it should reconnect using incremental delay.
     1. Client should increment the delay until `maxReconnectionDelay` is reached.
     1. Client should reconnect endless amount of times even if `maxReconnectionDelay` is reached.
 1. To minimize reconnects amount, client should multiplex messages.
