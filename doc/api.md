@@ -188,6 +188,100 @@ See: Client
 
 # /lib/server/Adapter.js
 
+## Adapter()
+
+Adapter interface.
+All adapters should inherit from this class.
+
+## Adapter#dispatch(recipient, data, callback)
+
+Dispatch a message.
+
+### Params:
+
+* **String** *recipient* 
+
+* **Mixed** *data* 
+
+* **Function** *callback* 
+
+### Return:
+
+* **Adapter** this
+
+## Adapter#open(sender, callback)
+
+A client opened a connection. Save it to determine later if the client is connected.
+
+### Params:
+
+* **String|Number** *sender* 
+
+* **Function** *callback* 
+
+### Return:
+
+* **Adapter** this
+
+## Adapter#connected(since, callback)
+
+Get users who opened a connection since x date.
+
+### Params:
+
+* **Date** *since* the date since user has send messages
+
+* **Function** *callback* 
+
+### Return:
+
+* **Adapter** this
+
+## Adapter#get(recipient, since, callback)
+
+Get all messages for the recipient, which are deliverable.
+
+### Params:
+
+* **String** *recipient* id
+
+* **Date** *since* which date to consider messages, the oldest message would
+
+* **Function** *callback* 
+
+### Return:
+
+* **Adapter** this
+
+## Adapter#delivery(opts, callback)
+
+Mark message status as deliverable, save clients who has got the message.
+
+Options
+  - `deliverable` boolean, message is undeliverable if false
+  - `delivered` boolean, true if some client got a message
+  - `client` client id which got a message
+  - `public` boolean, true if delivered event needs to be published on the storage
+
+### Params:
+
+* **Object** *opts* 
+
+* **Function** *callback* 
+
+### Return:
+
+* **Adapter** this
+
+## Adapter#destroy()
+
+Destroy the adapter.
+Remove all event listeners, close connections to the storage etc.
+
+### Return:
+
+* **Adapter** this
+
 
 
 # /lib/server/Connection.js
@@ -237,6 +331,10 @@ Define data to be send within a message
 
 * **Mixed** *data* 
 
+### Return:
+
+* **Message** this
+
 ## Message#send(callback)
 
 Send the message. Message is sent successful if every recipient has confirmed
@@ -265,53 +363,6 @@ after the message is stored.
 
 
 
-# /lib/server/adapters/Mongo.js
-
-## Mongo#open(sender, callback)
-
-A client opened a connection. Put the document to determine later
-if the client is connected.
-
-### Params:
-
-* **String|Number** *sender* 
-
-* **Function** *callback* 
-
-### Return:
-
-* **Mongo** this
-
-## Mongo#connected(since, callback)
-
-Get users who opened a connection since x date.
-
-### Params:
-
-* **Date** *since* the date since user has send messages
-
-* **Function** *callback* 
-
-### Return:
-
-* **Mongo** this
-
-## Mongo#get(recipient, since, callback, this)
-
-Get all messages for the recipient, which are deliverable.
-
-### Params:
-
-* **String** *recipient* id
-
-* **Date** *since* which date to consider messages, the oldest message would
-
-* **Function** *callback* 
-
-* **Mongo** *this* 
-
-
-
 # /lib/server/Server.js
 
 ## Server([options])
@@ -326,10 +377,14 @@ Server constructor.
 
 Default options, will be overwritten by options passed to the Server.
 
- - `deliveryTimeout` Message is not delivered if confirmation was not received during this time
- - `keepAlive` amount of ms to keep connection open. (Heroku requires this value to be less than 30s.)
- - `disconnectedAfter` amount of ms after which client counts as disconnected
- - `multiplexDuration` amount of ms messages will be collected before send
+ - `deliveryTimeout` Message is not delivered if confirmation was not received
+   during this time, default is `40000`
+ - `keepAlive` amount of ms to keep connection open. (Heroku requires this
+   value to be less than 30s.), default is `25000`
+ - `disconnectedAfter` amount of ms after which client counts as disconnected,
+   default is `40000`
+ - `multiplexDuration` amount of ms messages will be collected before send,
+   default is `500`
 
 ## Server#open(params)
 
@@ -412,48 +467,96 @@ Recommended to use a Server#message which is a higher level to send a message.
 
 # /lib/server/adapters/Memory.js
 
-## Memory#open(sender, callback)
+## Memory(opts)
 
-A client opened a connection. Put the document to determine later
-if the client is connected.
-
-### Params:
-
-* **String|Number** *sender* 
-
-* **Function** *callback* 
-
-### Return:
-
-* **Mongo** this
-
-## Memory#connected(since, callback)
-
-Get users who opened a connection since x date.
+Memory adapter constructor.
 
 ### Params:
 
-* **Date** *since* the date since user has send messages
+* **Object** *opts* will overwrite default options, see `Memory.options`
 
-* **Function** *callback* 
+## Memory.options
 
-### Return:
+Default options.
 
-* **Mongo** this
+  - `maxAge` message lifetime
+  - `cleanupInterval` interval when to cleanup the cache
+  - `cleanup` true if cache should be periodically cleaned up
 
-## Memory#get(recipient, since, callback, this)
+## Memory#dispatch()
 
-Get all messages for the recipient, which are deliverable.
+@see Adapter#dispatch
+
+## Memory#open()
+
+@see Adapter#open
+
+## Memory#connected()
+
+@see Adapter#connected
+
+## Memory#get()
+
+@see Adapter#get
+
+## Memory#delivery()
+
+@see Adapter#delivery
+
+## Memory#destroy()
+
+@see Adapter#destroy
+
+
+
+# /lib/server/adapters/Mongo.js
+
+## Mongo(uri, opts)
+
+Mongo adapter constructor.
 
 ### Params:
 
-* **String** *recipient* id
+* **String|Object** *uri* or Db instance from mongo driver.
 
-* **Date** *since* which date to consider messages, the oldest message would
+* **Object** *opts* will overwrite defaults, see `Mongo.options`
 
-* **Function** *callback* 
+## Mongo.options
 
-* **Memory** *this* 
+Mongo adapter defaults.
+
+  - `uri` mongo uri
+  - `db` mongo options
+  - `name` collection name, mubsub channel name
+  - `channel` mubsub channel options
+  - `maxClients` max amount of clients per recipient. Needed to reserve space
+    in docs, because capped collections can't grow.
+  - `stringify` function for data serialization, defaults to JSON.stringify
+  - `parse` function for data deserialization, defaults to JSON.parse
+
+## Mongo#dispatch()
+
+@see Adapter#dispatch
+
+## Mongo#open()
+
+@see Adapter#open
+
+## Mongo#connected()
+
+@see Adapter#connected
+
+## Mongo#get()
+
+@see Adapter#get
+
+## Mongo#delivery()
+
+@see Adapter#delivery
+
+## Mongo#destroy()
+
+@see Adapter#destroy
 
 
 
