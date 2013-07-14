@@ -7,6 +7,17 @@
 - lightweight client (appr. 2.5 kb minified and gzipped)
 - simple client spec, which can be implemented easily in any language
 
+## Why not socket.io
+
+1. Websockets have problems in the real world:
+  - it doesn't work with some reverse proxies
+  - it doesn't work on some PaaS (f.e. heroku)
+  - fallbacks are difficult to implement right
+1. Websockets performance is not required for chats
+1. Loosing messages is not acceptable for chats and co.
+1. Socket.io codebase is big, difficult to fix and has lots of issues.
+1. Communication with storages is not reliable in clustered environment. It also scales bad because of the way socket.io communicates between servers in case of reconnects. This is especially a problem if using long-polling.
+
 ## Todo
 
 - tests
