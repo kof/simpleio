@@ -1,0 +1,1 @@
+- 0.1.16 updated mubsub to 1.0.2 - auto recreate cursor on error

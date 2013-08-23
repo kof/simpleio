@@ -632,6 +632,7 @@ try {
 
 /**
  * Multiplexer constructor.
+ * Inherits from `Emitter`.
  *
  * @param {Object} opts
  *   - `duration` amount of time in ms to wait until emiting "reset" event if
@@ -645,6 +646,7 @@ function Multiplexer(opts) {
         self.reset(true);
     }, opts.duration);
 }
+
 
 Emitter(Multiplexer.prototype);
 module.exports = Multiplexer;
