@@ -9,6 +9,7 @@ var simpleioServer,
 
 program
     .option('-a, --adapter <adapter>', 'adapter to use Memory|Mongo', String, 'Memory')
+    .option('-p, --port <port>', 'port', Number, 3000)
     .parse(process.argv);
 
 simpleioServer = simpleio.create({adapter: new simpleio.adapters[program.adapter]})
@@ -47,7 +48,7 @@ express()
     .use(express.static(__dirname + '/..'))
     .listen(3000);
 
-console.log('Running on localhost:3000', ', using adapter', program.adapter);
+console.log('Running on localhost:' + program.port, ', using adapter', program.adapter);
 
 (function prompt() {
     program.prompt('Type recipient id:', function(recipient) {
