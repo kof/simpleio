@@ -46,7 +46,7 @@ express()
         }
     })
     .use(express.static(__dirname + '/..'))
-    .listen(3000);
+    .listen(program.port);
 
 console.log('Running on localhost:' + program.port, ', using adapter', program.adapter);
 
