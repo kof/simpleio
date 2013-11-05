@@ -1,6 +1,6 @@
 {
   "name": "simpleio",
-  "version": "0.1.15",
+  "version": "0.1.18",
   "description": "Simple long polling based communication",
   "author": {
     "name": "Oleg Slobodskoi",
